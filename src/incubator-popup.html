@@ -1,0 +1,54 @@
+<!--
+@license
+Copyright (c) 2018 Vaadin Ltd.
+This program is available under Commercial Vaadin Add-On License 3.0 (CVALv3).
+
+See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete license.
+-->
+
+<link rel="import" href="../../polymer/polymer-element.html">
+<link rel="import" href="../../vaadin-themable-mixin/vaadin-themable-mixin.html">
+<link rel="import" href="../../vaadin-element-mixin/vaadin-element-mixin.html">
+
+<dom-module id="incubator-popup">
+  <template>
+    <style>
+    </style>
+
+    <h1>Hello world</h1>
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /**
+       * `<incubator-popup>` is a template for incubator components.
+       *
+       * ```
+       * <incubator-popup>
+       * </incubator-popup>
+       * ```
+       *
+       * @memberof Vaadin
+       * @demo demo/index.html
+       */
+      class IncubatorPopup extends Vaadin.ElementMixin(Vaadin.ThemableMixin(Polymer.Element)) {
+        static get is() {
+          return 'incubator-popup';
+        }
+      }
+
+      customElements.define(IncubatorPopup.is, IncubatorPopup);
+
+      /**
+       * @namespace Vaadin
+       */
+      window.Vaadin.IncubatorPopup = IncubatorPopup;
+
+      if (window.Vaadin.runIfDevelopmentMode) {
+        window.Vaadin.runIfDevelopmentMode('vaadin-license-checker', IncubatorPopup);
+      }
+    })()
+  </script>
+</dom-module>
