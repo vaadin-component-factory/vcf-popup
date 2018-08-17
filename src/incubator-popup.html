@@ -9,13 +9,18 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 <link rel="import" href="../../polymer/polymer-element.html">
 <link rel="import" href="../../vaadin-themable-mixin/vaadin-themable-mixin.html">
 <link rel="import" href="../../vaadin-element-mixin/vaadin-element-mixin.html">
+<link rel="import" href="../../vaadin-overlay/vaadin-overlay.html">
 
 <dom-module id="incubator-popup">
   <template>
     <style>
+      :host {
+        display: block;
+      }
     </style>
 
-    <h1>Hello world</h1>
+    <vaadin-overlay id="popupOverlay" opened="{{opened}}">
+    </vaadin-overlay>
   </template>
 
   <script>
@@ -36,6 +41,91 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
       class IncubatorPopup extends Vaadin.ElementMixin(Vaadin.ThemableMixin(Polymer.Element)) {
         static get is() {
           return 'incubator-popup';
+        }
+
+        /**
+         * Object describing property-related metadata used by Polymer features
+         */
+        static get properties() {
+          return {
+            opened: {
+              type: Boolean,
+              value: false,
+              reflectToAttribute: true
+            },
+
+            for: {
+              type: String
+            },
+
+            isAttached: {
+              type: Boolean,
+              value: false
+            },
+
+            _targetElement: {
+              type: Object
+            }
+          };
+        }
+
+        static get observers() {
+          return [
+            '_attachToTarget(for, isAttached)'
+          ]
+        }
+
+        constructor() {
+          super();
+          this._boundShow = this.show.bind(this);
+          this._boundHide = this.hide.bind(this);
+        }
+
+        ready() {
+          super.ready();
+          this.$.popupOverlay.template = this.querySelector('template');
+
+          this._setPosition();
+        }
+
+        connectedCallback() {
+          if (!this._targetElement) {
+            this.isAttached = true;
+            this._targetElement = this.parentNode.querySelector(`#${this.for}`);
+          }
+          this._attachToTarget();
+          super.connectedCallback();
+        }
+
+        disconnectedCallback() {
+          super.disconnectedCallback();
+          this._detachFromTarget();
+        }
+
+        show() {
+          this.opened = true;
+        }
+
+        hide() {
+          this.opened = false;
+        }
+
+        _attachToTarget() {
+          if (!this.isAttached) {
+            return;
+          }
+          this._targetElement.addEventListener('click', this._boundShow);
+        }
+
+        _detachFromTarget() {
+          this._targetElement.removeEventListener('click', this._boundShow);
+        }
+
+        _setPosition() {
+          const targetBoundingRect = this._targetElement.getBoundingClientRect();
+
+          this.$.popupOverlay.style.top = targetBoundingRect.top;
+          this.$.popupOverlay.style.left = targetBoundingRect.left;
         }
       }
 

@@ -9,7 +9,13 @@
     <h3>Demo sample</h3>
     <vaadin-demo-snippet id="incubator-popup-demo-sample">
       <template preserve-content>
-        <incubator-popup>
+        <vaadin-button theme="icon" id="more">
+          <iron-icon icon="vaadin:ellipsis-dots-h"></iron-icon>
+        </vaadin-button>
+        <incubator-popup for="more">
+            <template>
+                <vaadin-button>test</vaadin-button>
+            </template>
         </incubator-popup>
       </template>
     </vaadin-demo-snippet>
