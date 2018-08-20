@@ -126,7 +126,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           const targetBoundingRect = this._targetElement.getBoundingClientRect();
           const overlayRect = this.$.popupOverlay.getBoundingClientRect();
           const positionLeft = targetBoundingRect.left;
-          const positionTop = targetBoundingRect.top + targetBoundingRect.height + window.scrollY;
+          const positionTop = targetBoundingRect.top + targetBoundingRect.height + window.pageYOffset;
 
           if (positionLeft + overlayRect.width > window.innerWidth) {
             this.$.popupOverlay.style.right = '0px';
