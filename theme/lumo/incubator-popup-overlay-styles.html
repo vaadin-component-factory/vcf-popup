@@ -1,0 +1,50 @@
+<link rel="import" href="../../../vaadin-lumo-styles/color.html">
+<link rel="import" href="../../../vaadin-lumo-styles/spacing.html">
+
+<dom-module id="lumo-incubator-element" theme-for="incubator-popup-overlay">
+  <template>
+    <style include="lumo-incubator-element-styles">
+      @media (max-width: 420px),
+      (max-height: 420px) {
+        :host {
+          top: 0 !important;
+          right: 0 !important;
+          bottom: var(--vaadin-overlay-viewport-bottom, 0) !important;
+          left: 0 !important;
+          align-items: stretch !important;
+          justify-content: flex-end !important;
+        }
+        [part="overlay"] {
+          max-height: 50vh;
+          width: 100vw;
+          border-radius: 0;
+          box-shadow: var(--lumo-box-shadow-xl);
+        }
+        /* The content part scrolls instead of the overlay part, because of the gradient fade-out */
+        [part="content"] {
+          padding: 30px var(--lumo-space-m);
+          max-height: inherit;
+          box-sizing: border-box;
+          -webkit-overflow-scrolling: touch;
+          overflow: auto;
+          -webkit-mask-image: linear-gradient(transparent, #000 40px, #000 calc(100% - 40px), transparent);
+          mask-image: linear-gradient(transparent, #000 40px, #000 calc(100% - 40px), transparent);
+        }
+        [part="backdrop"] {
+          display: block;
+        }
+        /* Animations */
+        :host([opening]) [part="overlay"] {
+          animation: 0.2s lumo-mobile-menu-overlay-enter cubic-bezier(.215, .61, .355, 1) both;
+        }
+        :host([closing]),
+        :host([closing]) [part="backdrop"] {
+          animation-delay: 0.14s;
+        }
+        :host([closing]) [part="overlay"] {
+          animation: 0.14s 0.14s lumo-mobile-menu-overlay-exit cubic-bezier(.550, .055, .675, .19) both;
+        }
+      }
+    </style>
+  </template>
+</dom-module>
