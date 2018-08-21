@@ -9,17 +9,24 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 <link rel="import" href="../../polymer/polymer-element.html">
 <link rel="import" href="../../vaadin-themable-mixin/vaadin-themable-mixin.html">
 <link rel="import" href="../../vaadin-element-mixin/vaadin-element-mixin.html">
+<link rel="import" href="../../vaadin-overlay/vaadin-overlay.html">
+<link rel="import" href="incubator-popup-overlay.html">
+
 
 <dom-module id="incubator-popup">
   <template>
     <style>
+      :host {
+        display: block;
+      }
     </style>
 
-    <h1>Hello world</h1>
+    <incubator-popup-overlay id="popupOverlay" opened="{{opened}}">
+    </incubator-popup-overlay>
   </template>
 
   <script>
-    (function () {
+    (function() {
       'use strict';
 
       /**
@@ -37,6 +44,105 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         static get is() {
           return 'incubator-popup';
         }
+
+        /**
+         * Object describing property-related metadata used by Polymer features
+         */
+        static get properties() {
+          return {
+            opened: {
+              type: Boolean,
+              value: false,
+              reflectToAttribute: true
+            },
+
+            for: {
+              type: String
+            },
+
+            closeOnClick: {
+              type: Boolean,
+              value: false,
+              reflectToAttribute: true
+            },
+
+            _targetElement: {
+              type: Object
+            }
+          };
+        }
+
+        static get observers() {
+          return [
+            '_attachToTarget(for)'
+          ];
+        }
+
+        constructor() {
+          super();
+          this._boundShow = this.show.bind(this);
+          this._boundHide = this.hide.bind(this);
+        }
+
+        ready() {
+          super.ready();
+          this.$.popupOverlay.template = this.querySelector('template');
+          if (this.closeOnClick) {
+            this.$.popupOverlay.addEventListener('click', this._boundHide);
+          }
+        }
+
+        connectedCallback() {
+          if (!this._targetElement) {
+            this._targetElement = this.parentNode.querySelector(`#${this.for}`);
+          }
+          this._attachToTarget();
+          super.connectedCallback();
+        }
+
+        disconnectedCallback() {
+          super.disconnectedCallback();
+          this._detachFromTarget();
+          if (this.closeOnClick) {
+            this.$.popupOverlay.removeEventListener('click', this._boundHide);
+          }
+        }
+
+        show() {
+          this.opened = true;
+          this._setPosition();
+        }
+
+        hide() {
+          this.opened = false;
+        }
+
+        _attachToTarget() {
+          if (!this._targetElement) {
+            return;
+          }
+          this._targetElement.addEventListener('click', this._boundShow);
+        }
+
+        _detachFromTarget() {
+          this._targetElement.removeEventListener('click', this._boundShow);
+        }
+
+        _setPosition() {
+          const targetBoundingRect = this._targetElement.getBoundingClientRect();
+          const overlayRect = this.$.popupOverlay.getBoundingClientRect();
+          const positionLeft = targetBoundingRect.left;
+          const positionTop = targetBoundingRect.top + targetBoundingRect.height + window.pageYOffset;
+
+          if (positionLeft + overlayRect.width > window.innerWidth) {
+            this.$.popupOverlay.style.right = '0px';
+            this.$.popupOverlay.style.left = 'auto';
+          } else {
+            this.$.popupOverlay.style.left = `${Math.max(0, positionLeft)}px`;
+            this.$.popupOverlay.style.right = 'auto';
+          }
+          this.$.popupOverlay.style.top = `${positionTop}px`;
+        }
       }
 
       customElements.define(IncubatorPopup.is, IncubatorPopup);
@@ -49,6 +155,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
       if (window.Vaadin.runIfDevelopmentMode) {
         window.Vaadin.runIfDevelopmentMode('vaadin-license-checker', IncubatorPopup);
       }
-    })()
+    })();
   </script>
 </dom-module>
