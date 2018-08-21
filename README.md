@@ -3,18 +3,34 @@
 
 # &lt;incubator-popup&gt;
 
-[Live Demo ↗](https://vaadin.com/components/incubator-popup/html-examples)
-|
-[API documentation ↗](https://vaadin.com/components/incubator-popup/html-api)
+[Live Demo ↗](https://incubator.app.fi/incubator-popup-demo/)
 
 
-[&lt;incubator-popup&gt;](https://vaadin.com/components/incubator-popup) is a Web Component providing an easy way to ask the user to confirm a choice, part of the [Vaadin components](https://vaadin.com/components).
+[&lt;incubator-popup&gt;](https://vaadin.com/directory/components/vaadinincubator-popup) is a Web Component providing an easy way to hide extra content from your webpage and show them to the user whenever they need them.
 
 ```html
-  <incubator-popup header="Unsaved changes" confirm-text="Save" on-confirm="save"
-    cancel on-cancel="cancel" reject reject-text="Discard" on-reject="discard">
-    Do you want to save or discard your changes before navigating away?
-  </incubator-popup>
+  <vaadin-button theme="icon tertiary" id="more">
+    <iron-icon icon="vaadin:ellipsis-dots-h"></iron-icon>
+  </vaadin-button>
+  <incubator-popup for="more" close-on-click>
+    <template>
+      <style>
+        [part="container"] {
+          padding: 5px 10px;
+        }
+      </style>
+      <div part="container">
+        <vaadin-button theme="icon">
+          <iron-icon icon="vaadin:edit"></iron-icon>
+        </vaadin-button>
+        <vaadin-button theme="icon">
+          <iron-icon icon="vaadin:close"></iron-icon>
+        </vaadin-button>
+        <vaadin-button theme="icon">
+          <iron-icon icon="vaadin:plus"></iron-icon>
+        </vaadin-button>
+      </div>
+    </template>
 ```
 
 [<img src="https://raw.githubusercontent.com/vaadin/incubator-popup/master/screenshot.png" width="200" alt="Screenshot of incubator-popup">](https://vaadin.com/components/incubator-popup)
@@ -22,12 +38,7 @@
 
 ## Installation
 
-The Vaadin components are distributed as Bower and npm packages.
-Please note that the version range is the same, as the API has not changed.
-You should not mix Bower and npm versions in the same application, though.
-
-Unlike the official Polymer Elements, the converted Polymer 3 compatible Vaadin components
-are only published on npm, not pushed to GitHub repositories.
+The Vaadin Incubator components are distributed as Bower packages.
 
 ### Polymer 2 and HTML Imports compatible version
 
@@ -41,20 +52,6 @@ Once installed, import it in your application:
 
 ```html
 <link rel="import" href="bower_components/incubator-popup/incubator-popup.html">
-```
-### Polymer 3 and ES Modules compatible version
-
-
-Install `incubator-popup`:
-
-```sh
-npm i @vaadin/incubator-popup --save
-```
-
-Once installed, import it in your application:
-
-```js
-import '@vaadin/incubator-popup/incubator-popup.js';
 ```
 
 ## Getting Started
