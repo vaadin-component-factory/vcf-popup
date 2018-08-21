@@ -38,12 +38,7 @@
 
 ## Installation
 
-The Vaadin components are distributed as Bower and npm packages.
-Please note that the version range is the same, as the API has not changed.
-You should not mix Bower and npm versions in the same application, though.
-
-Unlike the official Polymer Elements, the converted Polymer 3 compatible Vaadin components
-are only published on npm, not pushed to GitHub repositories.
+The Vaadin Incubator components are distributed as Bower packages.
 
 ### Polymer 2 and HTML Imports compatible version
 
@@ -57,20 +52,6 @@ Once installed, import it in your application:
 
 ```html
 <link rel="import" href="bower_components/incubator-popup/incubator-popup.html">
-```
-### Polymer 3 and ES Modules compatible version
-
-
-Install `incubator-popup`:
-
-```sh
-npm i @vaadin/incubator-popup --save
-```
-
-Once installed, import it in your application:
-
-```js
-import '@vaadin/incubator-popup/incubator-popup.js';
 ```
 
 ## Getting Started
