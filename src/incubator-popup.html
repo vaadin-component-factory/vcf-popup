@@ -10,6 +10,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 <link rel="import" href="../../vaadin-themable-mixin/vaadin-themable-mixin.html">
 <link rel="import" href="../../vaadin-element-mixin/vaadin-element-mixin.html">
 <link rel="import" href="../../vaadin-overlay/vaadin-overlay.html">
+<link rel="import" href="../../iron-media-query/iron-media-query.html">
 <link rel="import" href="incubator-popup-overlay.html">
 
 
@@ -21,8 +22,13 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
       }
     </style>
 
-    <incubator-popup-overlay id="popupOverlay" opened="{{opened}}">
+    <incubator-popup-overlay id="popupOverlay" opened="{{opened}}" phone$="[[_phone]]">
     </incubator-popup-overlay>
+
+    <iron-media-query
+      query="[[_phoneMediaQuery]]"
+      query-matches="{{_phone}}">
+    </iron-media-query>
   </template>
 
   <script>
@@ -68,7 +74,13 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
             _targetElement: {
               type: Object
-            }
+            },
+
+            _phone: Boolean,
+
+            _phoneMediaQuery: {
+              value: '(max-width: 420px), (max-height: 420px)'
+            },
           };
         }
 
