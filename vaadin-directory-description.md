@@ -1,6 +1,6 @@
 # &lt;incubator-popup&gt;
 
-[&lt;incubator-popup&gt;](https://vaadin.com/directory/components/vaadinincubator-popup) is a Web Component providing an easy way to hide extra content from your webpage and show them to the user whenever they need them.
+[&lt;incubator-popup&gt;](https://vaadin.com/directory/component/vaadinincubator-popup) is a Web Component providing an easy way to hide extra content from your webpage and show them to the user whenever they need them.
 
 [<img src="https://raw.githubusercontent.com/vaadin/incubator-popup/master/screenshot.png" width="200" alt="Screenshot of incubator-popup">](https://vaadin.com/components/incubator-popup)
 
@@ -30,3 +30,5 @@
       </div>
     </template>
 ```
+
+[Live Demo ↗](https://incubator.app.fi/incubator-popup-demo/)
