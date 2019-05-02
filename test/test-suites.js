@@ -1,3 +1,3 @@
-window.IncubatorPopupSuites = [
+window.VcfPopupSuites = [
   'sample.html',
 ];

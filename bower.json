@@ -1,19 +1,19 @@
 {
-  "name": "incubator-popup",
+  "name": "vcf-popup",
   "homepage": "https://vaadin.com/components",
   "authors": [
     "Vaadin Ltd"
   ],
-  "description": "incubator-popup",
-  "main": "incubator-popup.html",
+  "description": "vcf-popup",
+  "main": "vcf-popup.html",
   "keywords": [
     "Vaadin",
-    "incubator-popup",
+    "vcf-popup",
     "web-components",
     "web-component",
     "polymer"
   ],
-  "license": "https://raw.githubusercontent.com/vaadin/incubator-popup/master/LICENSE",
+  "license": "https://raw.githubusercontent.com/vaadin/vcf-popup/master/LICENSE",
   "ignore": [
     "**/.*",
     "node_modules",

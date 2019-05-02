@@ -1,12 +1,12 @@
 {
-  "name": "Vaadin Incubator Element",
+  "name": "Vaadin Vcf Element",
   "pages": [
   {
     "name": "Basics",
-    "url": "incubator-popup-basic-demos",
-    "src": "incubator-popup-basic-demos.html",
+    "url": "vcf-popup-basic-demos",
+    "src": "vcf-popup-basic-demos.html",
     "meta": {
-      "title": "incubator-popup Basic Examples",
+      "title": "vcf-popup Basic Examples",
       "description": "",
       "image": ""
      }

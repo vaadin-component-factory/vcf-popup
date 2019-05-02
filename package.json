@@ -1,25 +1,25 @@
 {
-  "name": "@vaadin/incubator-popup",
+  "name": "@vaadin/vcf-popup",
   "version": "1.0.0-beta2",
-  "description": "incubator-popup",
-  "main": "incubator-popup.html",
-  "repository": "vaadin/incubator-popup",
+  "description": "vcf-popup",
+  "main": "vcf-popup.html",
+  "repository": "vaadin/vcf-popup",
   "keywords": [
     "Vaadin",
-    "incubator-popup",
+    "vcf-popup",
     "web-components",
     "web-component",
     "polymer"
   ],
   "author": "Vaadin Ltd",
-  "license": "https://raw.githubusercontent.com/vaadin/incubator-popup/master/LICENSE",
+  "license": "https://raw.githubusercontent.com/vaadin/vcf-popup/master/LICENSE",
   "bugs": {
-    "url": "https://github.com/vaadin/incubator-popup/issues"
+    "url": "https://github.com/vaadin/vcf-popup/issues"
   },
   "homepage": "https://vaadin.com/components",
   "scripts": {
     "test": "wct",
-    "analyze": "polymer analyze incubator-popup.html > analysis.json",
+    "analyze": "polymer analyze vcf-popup.html > analysis.json",
     "preversion": "gulp version:update"
   },
   "devDependencies": {

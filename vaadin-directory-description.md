@@ -1,8 +1,8 @@
-# &lt;incubator-popup&gt;
+# &lt;vcf-popup&gt;
 
-[&lt;incubator-popup&gt;](https://vaadin.com/directory/component/vaadinincubator-popup) is a Web Component providing an easy way to hide extra content from your webpage and show them to the user whenever they need them.
+[&lt;vcf-popup&gt;](https://vaadin.com/directory/component/vaadinvcf-popup) is a Web Component providing an easy way to hide extra content from your webpage and show them to the user whenever they need them.
 
-[<img src="https://raw.githubusercontent.com/vaadin/incubator-popup/master/screenshot.png" width="200" alt="Screenshot of incubator-popup">](https://vaadin.com/components/incubator-popup)
+[<img src="https://raw.githubusercontent.com/vaadin/vcf-popup/master/screenshot.png" width="200" alt="Screenshot of vcf-popup">](https://vaadin.com/components/vcf-popup)
 
 ## Example Usage
 
@@ -10,7 +10,7 @@
   <vaadin-button theme="icon tertiary" id="more">
     <iron-icon icon="vaadin:ellipsis-dots-h"></iron-icon>
   </vaadin-button>
-  <incubator-popup for="more" close-on-click>
+  <vcf-popup for="more" close-on-click>
     <template>
       <style>
         [part="container"] {
@@ -31,4 +31,4 @@
     </template>
 ```
 
-[Live Demo ↗](https://incubator.app.fi/incubator-popup-demo/)
+[Live Demo ↗](https://incubator.app.fi/vcf-popup-demo/)

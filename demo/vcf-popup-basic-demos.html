@@ -1,4 +1,4 @@
-<dom-module id="incubator-popup-basic-demos">
+<dom-module id="vcf-popup-basic-demos">
   <template>
     <style include="vaadin-component-demo-shared-styles">
       :host {
@@ -7,19 +7,19 @@
     </style>
 
     <h3>Demo sample</h3>
-    <vaadin-demo-snippet id="incubator-popup-demo-sample">
+    <vaadin-demo-snippet id="vcf-popup-demo-sample">
       <template preserve-content>
         <vaadin-button theme="icon tertiary" id="more">
           <iron-icon icon="vaadin:ellipsis-dots-h"></iron-icon>
         </vaadin-button>
-        <incubator-popup for="more" close-on-click>
+        <vcf-popup for="more" close-on-click>
           <template>
             <style>
-              [part="container"] {
+              #container {
                 padding: 5px 10px;
               }
             </style>
-            <div part="container">
+            <div id="container">
               <vaadin-button theme="icon">
                 <iron-icon icon="vaadin:edit"></iron-icon>
               </vaadin-button>
@@ -31,17 +31,17 @@
               </vaadin-button>
             </div>
           </template>
-        </incubator-popup>
+        </vcf-popup>
       </template>
     </vaadin-demo-snippet>
 
   </template>
   <script>
-    class IncubatorPopupBasicDemos extends DemoReadyEventEmitter(ElementDemo(Polymer.Element)) {
+    class VcfPopupBasicDemos extends DemoReadyEventEmitter(ElementDemo(Polymer.Element)) {
       static get is() {
-        return 'incubator-popup-basic-demos';
+        return 'vcf-popup-basic-demos';
       }
     }
-    customElements.define(IncubatorPopupBasicDemos.is, IncubatorPopupBasicDemos);
+    customElements.define(VcfPopupBasicDemos.is, VcfPopupBasicDemos);
   </script>
 </dom-module>

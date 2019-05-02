@@ -1,4 +1,4 @@
-gemini.suite('incubator-popup', function(rootSuite) {
+gemini.suite('vcf-popup', function(rootSuite) {
   function wait(actions, find) {
     actions.wait(5000);
   }

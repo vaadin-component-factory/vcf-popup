@@ -11,10 +11,10 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 <link rel="import" href="../../vaadin-element-mixin/vaadin-element-mixin.html">
 <link rel="import" href="../../vaadin-overlay/vaadin-overlay.html">
 <link rel="import" href="../../iron-media-query/iron-media-query.html">
-<link rel="import" href="incubator-popup-overlay.html">
+<link rel="import" href="vcf-popup-overlay.html">
 
 
-<dom-module id="incubator-popup">
+<dom-module id="vcf-popup">
   <template>
     <style>
       :host {
@@ -22,8 +22,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
       }
     </style>
 
-    <incubator-popup-overlay id="popupOverlay" opened="{{opened}}" phone$="[[_phone]]">
-    </incubator-popup-overlay>
+    <vcf-popup-overlay id="popupOverlay" opened="{{opened}}" phone$="[[_phone]]">
+    </vcf-popup-overlay>
 
     <iron-media-query
       query="[[_phoneMediaQuery]]"
@@ -36,19 +36,19 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
       'use strict';
 
       /**
-       * `<incubator-popup>` is a template for incubator components.
+       * `<vcf-popup>` is a template for vcf components.
        *
        * ```
-       * <incubator-popup>
-       * </incubator-popup>
+       * <vcf-popup>
+       * </vcf-popup>
        * ```
        *
        * @memberof Vaadin
        * @demo demo/index.html
        */
-      class IncubatorPopup extends Vaadin.ElementMixin(Vaadin.ThemableMixin(Polymer.Element)) {
+      class VcfPopup extends Vaadin.ElementMixin(Vaadin.ThemableMixin(Polymer.Element)) {
         static get is() {
-          return 'incubator-popup';
+          return 'vcf-popup';
         }
 
         /**
@@ -157,15 +157,15 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
       }
 
-      customElements.define(IncubatorPopup.is, IncubatorPopup);
+      customElements.define(VcfPopup.is, VcfPopup);
 
       /**
        * @namespace Vaadin
        */
-      window.Vaadin.IncubatorPopup = IncubatorPopup;
+      window.Vaadin.VcfPopup = VcfPopup;
 
       if (window.Vaadin.runIfDevelopmentMode) {
-        window.Vaadin.runIfDevelopmentMode('vaadin-license-checker', IncubatorPopup);
+        window.Vaadin.runIfDevelopmentMode('vaadin-license-checker', VcfPopup);
       }
     })();
   </script>

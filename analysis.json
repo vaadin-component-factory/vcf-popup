@@ -6,7 +6,7 @@
       "description": "",
       "summary": "",
       "sourceRange": {
-        "file": "src/incubator-popup.html",
+        "file": "src/vcf-popup.html",
         "start": {
           "line": 44,
           "column": 6
@@ -18,9 +18,9 @@
       },
       "elements": [
         {
-          "description": "`<incubator-popup>` is a template for incubator components.\n\n```\n<incubator-popup>\n</incubator-popup>\n```",
+          "description": "`<vcf-popup>` is a template for vcf components.\n\n```\n<vcf-popup>\n</vcf-popup>\n```",
           "summary": "",
-          "path": "src/incubator-popup.html",
+          "path": "src/vcf-popup.html",
           "properties": [],
           "methods": [],
           "staticMethods": [],
@@ -43,7 +43,7 @@
           },
           "privacy": "public",
           "superclass": "HTMLElement",
-          "name": "Vaadin.IncubatorPopup",
+          "name": "Vaadin.VcfPopup",
           "attributes": [],
           "events": [],
           "styling": {
@@ -51,7 +51,7 @@
             "selectors": []
           },
           "slots": [],
-          "tagname": "incubator-popup"
+          "tagname": "vcf-popup"
         }
       ]
     }
