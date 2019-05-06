@@ -1,12 +1,14 @@
-[![Build Status](https://travis-ci.org/vaadin/vcf-popup.svg?branch=master)](https://travis-ci.org/vaadin/vcf-popup)
+# vcf-popup Web Component
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/vaadin/web-components?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/vaadin-component-factoryvcf-popup)
 
-# &lt;vcf-popup&gt;
+&lt;vcf-popup&gt; is a Web Component providing an easy way to hide extra content from your webpage and show them to the user whenever they need them.
 
-[Live Demo ↗](https://incubator.app.fi/vcf-popup-demo/)
+[Live Demo ↗](https://incubator.app.fi/popup-demo/popup)
 
+<img src="https://raw.githubusercontent.com/vaadin/incubator-popup/master/screenshot.png" width="500" alt="Screenshot of vcf-popup">
 
-[&lt;vcf-popup&gt;](https://vaadin.com/directory/components/vaadinvcf-popup) is a Web Component providing an easy way to hide extra content from your webpage and show them to the user whenever they need them.
+## Usage
 
 ```html
   <vaadin-button theme="icon tertiary" id="more">
@@ -33,12 +35,11 @@
     </template>
 ```
 
-[<img src="https://raw.githubusercontent.com/vaadin/vcf-popup/master/screenshot.png" width="200" alt="Screenshot of vcf-popup">](https://vaadin.com/components/vcf-popup)
 
 
 ## Installation
 
-The Vaadin Vcf components are distributed as Bower packages.
+This components is distributed as Bower packages.
 
 ### Polymer 2 and HTML Imports compatible version
 
@@ -107,7 +108,10 @@ We are using [ESLint](http://eslint.org/) for linting JavaScript code. You can c
   - Wait for response from one of Vaadin components team members
 
 
-## License
+# Vaadin Prime
+This component is available in Vaadin Prime subscription. It is still open source, but you need to have a valid CVAL license in order to use it. Read more at: https://vaadin.com/pricing
+
+# License
 
 Commercial Vaadin Add-on License version 3 (CVALv3). For license terms, see LICENSE.
 
