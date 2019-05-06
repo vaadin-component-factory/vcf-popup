@@ -9,6 +9,8 @@
 <img src="https://raw.githubusercontent.com/vaadin/incubator-popup/master/screenshot.png" width="500" alt="Screenshot of vcf-popup">
 
 ## Usage
+Add <vcf-popup> to the page with attribute `for` that match `id` element to which popup should be bind to. Now after clicking on target element, popup will be shown.
+
 
 ```html
   <vaadin-button theme="icon tertiary" id="more">
