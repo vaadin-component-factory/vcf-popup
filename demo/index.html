@@ -1,29 +1,59 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-  <title>vcf-popup Examples</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-
-  <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../../vaadin-demo-helpers/vaadin-component-demo.html">
-  <link rel="import" href="../../vaadin-demo-helpers/vaadin-demo-snippet.html">
-  <link rel="import" href="../../vaadin-demo-helpers/vaadin-demo-ready-event-emitter.html">
-
-  <script src="./vcf-popup-demo.js"></script>
-
-  <link rel="import" href="../vcf-popup.html">
-  <link rel="import" href="../../vaadin-button/vaadin-button.html">
-  <link rel="import" href="../../vaadin-icons/vaadin-icons.html">
-  <link rel="import" href="../../vaadin-lumo-styles/typography.html">
-
-  <custom-style>
-    <style include="vaadin-component-demo-shared-styles"></style>
-  </custom-style>
-</head>
-
-<body>
-  <vaadin-component-demo config-src="demos.json"></vaadin-component-demo>
-</body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes" />
+    <title>vcf-popup demo</title>
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+    <script type="module" src="demo.js"></script>
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        .centered {
+          max-width: 1000px;
+        }
+        main {
+          opacity: 1;
+          transition: opacity 1s;
+        }
+        main.hidden {
+          opacity: 0;
+        }
+      </style>
+    </custom-style>
+    <script>
+      window.addEventListener('WebComponentsReady', () => document.querySelector('main').classList.remove('hidden'));
+    </script>
+  </head>
+  <body>
+    <main class="vertical-section-container centered hidden">
+      <h3>Basic</h3>
+      <demo-snippet>
+        <template>
+          <vaadin-button theme="icon tertiary" id="more">
+            <iron-icon icon="vaadin:ellipsis-dots-h"></iron-icon>
+          </vaadin-button>
+          <vcf-popup for="more" close-on-click>
+            <template>
+              <style>
+                #container {
+                  padding: 5px 10px;
+                }
+              </style>
+              <div id="container">
+                <vaadin-button theme="icon">
+                  <iron-icon icon="vaadin:edit"></iron-icon>
+                </vaadin-button>
+                <vaadin-button theme="icon">
+                  <iron-icon icon="vaadin:close"></iron-icon>
+                </vaadin-button>
+                <vaadin-button theme="icon">
+                  <iron-icon icon="vaadin:plus"></iron-icon>
+                </vaadin-button>
+              </div>
+            </template>
+          </vcf-popup>
+        </template>
+      </demo-snippet>
+    </main>
+  </body>
 </html>
