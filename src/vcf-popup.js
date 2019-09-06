@@ -12,7 +12,7 @@ import { ElementMixin } from '@vaadin/vaadin-element-mixin';
 import '@vaadin/vaadin-overlay';
 import '@polymer/iron-media-query';
 
-class VcfPopupP3 extends ElementMixin(ThemableMixin(PolymerElement)) {
+class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   static get template() {
     return html`
       <style>
@@ -135,13 +135,13 @@ class VcfPopupP3 extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 }
 
-customElements.define(VcfPopupP3.is, VcfPopupP3);
+customElements.define(VcfPopup.is, VcfPopup);
 
 /**
  * @namespace Vaadin
  */
-window.Vaadin.VcfPopupP3 = VcfPopupP3;
+window.Vaadin.VcfPopup = VcfPopup;
 
 if (window.Vaadin.runIfDevelopmentMode) {
-  window.Vaadin.runIfDevelopmentMode('vaadin-license-checker', VcfPopupP3);
+  window.Vaadin.runIfDevelopmentMode('vaadin-license-checker', VcfPopup);
 }
