@@ -131,7 +131,12 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       this.$.popupOverlay.style.left = `${Math.max(0, positionLeft)}px`;
       this.$.popupOverlay.style.right = 'auto';
     }
-    this.$.popupOverlay.style.top = `${positionTop}px`;
+
+    if (positionTop + overlayRect.height > window.innerHeight + window.pageYOffset) {
+      this.$.popupOverlay.style.top = `${positionTop - targetBoundingRect.height - overlayRect.height}px`;
+    } else {
+      this.$.popupOverlay.style.top = `${positionTop}px`;
+    }
   }
 }
 
