@@ -21,7 +21,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         }
       </style>
 
-      <vaadin-overlay id="popupOverlay" opened="{{opened}}" phone$="[[_phone]]"> </vaadin-overlay>
+      <vaadin-overlay id="popupOverlay" opened="{{opened}}" theme$="[[theme]]" phone$="[[_phone]]"> </vaadin-overlay>
 
       <iron-media-query query="[[_phoneMediaQuery]]" query-matches="{{_phone}}"> </iron-media-query>
     `;
