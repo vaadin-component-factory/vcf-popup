@@ -9,9 +9,18 @@
 import { html, PolymerElement } from '@polymer/polymer/polymer-element';
 import { ThemableMixin } from '@vaadin/vaadin-themable-mixin';
 import { ElementMixin } from '@vaadin/vaadin-element-mixin';
+import { OverlayElement } from '@vaadin/vaadin-overlay/src/vaadin-overlay.js';
 import '@vaadin/vaadin-license-checker/vaadin-license-checker';
 import '@vaadin/vaadin-overlay';
 import '@polymer/iron-media-query';
+
+class PopupOverlayElement extends OverlayElement {
+  static get is() {
+    return 'vcf-popup-overlay';
+  }
+}
+
+customElements.define(PopupOverlayElement.is, PopupOverlayElement);
 
 class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   static get template() {
@@ -22,7 +31,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         }
       </style>
 
-      <vaadin-overlay id="popupOverlay" opened="{{opened}}" theme$="[[theme]]" phone$="[[_phone]]"> </vaadin-overlay>
+      <vcf-popup-overlay id="popupOverlay" opened="{{opened}}" theme$="[[theme]]" phone$="[[_phone]]"> </vcf-popup-overlay>
 
       <iron-media-query query="[[_phoneMediaQuery]]" query-matches="{{_phone}}"> </iron-media-query>
     `;

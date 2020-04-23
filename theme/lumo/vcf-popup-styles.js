@@ -60,7 +60,7 @@ popupTheme.register(popupTheme.id);
 
 const overlayTheme = document.createElement('dom-module');
 overlayTheme.id = 'vcf-vaadin-overlay-lumo';
-overlayTheme.setAttribute('theme-for', 'vaadin-overlay');
+overlayTheme.setAttribute('theme-for', 'vcf-popup-overlay');
 overlayTheme.innerHTML = `
     <template>
       <style>
