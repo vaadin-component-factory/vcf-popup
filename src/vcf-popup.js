@@ -1,16 +1,23 @@
 /*
- * @license
- * Copyright (c) 2018 Vaadin Ltd.
- * This program is available under Commercial Vaadin Add-On License 3.0 (CVALv3).
+ * Copyright 2000-2020 Vaadin Ltd.
  *
- * See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete license.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import { html, PolymerElement } from '@polymer/polymer/polymer-element';
 import { ThemableMixin } from '@vaadin/vaadin-themable-mixin';
 import { ElementMixin } from '@vaadin/vaadin-element-mixin';
 import { OverlayElement } from '@vaadin/vaadin-overlay/src/vaadin-overlay.js';
-import '@vaadin/vaadin-license-checker/vaadin-license-checker';
 import '@vaadin/vaadin-overlay';
 import '@polymer/iron-media-query';
 
@@ -79,12 +86,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
    */
   static _finalizeClass() {
     super._finalizeClass();
-
-    const devModeCallback = window.Vaadin.developmentModeCallback;
-    const licenseChecker = devModeCallback && devModeCallback['vaadin-license-checker'];
-    if (typeof licenseChecker === 'function') {
-      licenseChecker(VcfPopup);
-    }
   }
 
   static get observers() {
