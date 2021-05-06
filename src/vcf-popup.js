@@ -101,6 +101,8 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   ready() {
     super.ready();
     this.$.popupOverlay.template = this.querySelector('template');
+    this.$.popupOverlay.addEventListener('vaadin-overlay-open', () => this._popupOpenChanged(true));
+    this.$.popupOverlay.addEventListener('vaadin-overlay-close', () => this._popupOpenChanged(false));
     if (this.closeOnClick) {
       this.$.popupOverlay.addEventListener('click', this._boundHide);
     }
@@ -162,6 +164,15 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       this.$.popupOverlay.style.top = `${positionTop}px`;
     }
   }
+
+  _popupOpenChanged(isOpened) {
+    this.dispatchEvent(new CustomEvent('popup-open-changed', {
+      detail: {
+        opened: isOpened
+      }
+    }));
+  }
+
 }
 
 customElements.define(VcfPopup.is, VcfPopup);
