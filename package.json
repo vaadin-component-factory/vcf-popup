@@ -1,6 +1,6 @@
 {
   "name": "@vaadin-component-factory/vcf-popup",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Vaadin Component Factory Popup for Polymer 3",
   "main": "theme/lumo/vcf-popup.js",
   "author": "Vaadin Ltd",
@@ -21,7 +21,7 @@
   "files": [
     "src",
     "theme"
-  ],  
+  ],
   "scripts": {
     "test": "wct",
     "lint": "eslint src/*.js",
