@@ -1,5 +1,6 @@
 import '@vaadin/vaadin-lumo-styles/spacing';
 import '@vaadin/vaadin-lumo-styles/style';
+import '@vaadin/polymer-legacy-adapter';
 
 const popupTheme = document.createElement('dom-module');
 popupTheme.id = 'vcf-popup-lumo';

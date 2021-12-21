@@ -16,8 +16,9 @@
 
 import { html, PolymerElement } from '@polymer/polymer/polymer-element';
 import { ThemableMixin } from '@vaadin/vaadin-themable-mixin';
-import { ElementMixin } from '@vaadin/vaadin-element-mixin';
+import { ElementMixin } from '@vaadin/component-base/src/element-mixin';
 import { OverlayElement } from '@vaadin/vaadin-overlay/src/vaadin-overlay.js';
+import '@vaadin/polymer-legacy-adapter/template-renderer.js';
 import '@vaadin/vaadin-overlay';
 import '@polymer/iron-media-query';
 
@@ -38,7 +39,14 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         }
       </style>
 
-      <vcf-popup-overlay id="popupOverlay" opened="{{opened}}" theme$="[[theme]]" with-backdrop="[[_phone]]" phone$="[[_phone]]"> </vcf-popup-overlay>
+      <vcf-popup-overlay
+        id="popupOverlay"
+        opened="{{opened}}"
+        theme$="[[theme]]"
+        with-backdrop="[[_phone]]"
+        phone$="[[_phone]]"
+      >
+      </vcf-popup-overlay>
 
       <iron-media-query query="[[_phoneMediaQuery]]" query-matches="{{_phone}}"> </iron-media-query>
     `;
@@ -174,13 +182,14 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     } else {
       window.removeEventListener('scroll', this._boundSetPosition, true);
     }
-    this.dispatchEvent(new CustomEvent('popup-open-changed', {
-      detail: {
-        opened: isOpened
-      }
-    }));
+    this.dispatchEvent(
+      new CustomEvent('popup-open-changed', {
+        detail: {
+          opened: isOpened
+        }
+      })
+    );
   }
-
 }
 
 customElements.define(VcfPopup.is, VcfPopup);
