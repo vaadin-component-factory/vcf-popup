@@ -1,6 +1,6 @@
 {
   "name": "@vaadin-component-factory/vcf-popup",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Vaadin Component Factory Popup for Polymer 3",
   "main": "theme/lumo/vcf-popup.js",
   "author": "Vaadin Ltd",
@@ -42,18 +42,17 @@
     ]
   },
   "dependencies": {
-    "@polymer/iron-icon": "^3.0.1",
     "@polymer/iron-media-query": "^3.0.1",
     "@polymer/polymer": "^3.0.0",
-    "@vaadin/vaadin-button": "^22.0.1",
-    "@vaadin/component-base": "^22.0.1",
-    "@vaadin/vaadin-icons": "^4.3.1",
-    "@vaadin/vaadin-lumo-styles": "^22.0.1",
-    "@vaadin/vaadin-overlay": "^22.0.1",
-    "@vaadin/vaadin-themable-mixin": "^22.0.1"
+    "@vaadin/button": "^24.0.0",
+    "@vaadin/component-base": "^24.0.0",
+    "@vaadin/icon": "^24.0.0",
+    "@vaadin/icons": "^24.0.0",
+    "@vaadin/overlay": "^24.0.0",
+    "@vaadin/vaadin-lumo-styles": "^24.0.0",
+    "@vaadin/vaadin-themable-mixin": "^24.0.0"
   },
   "devDependencies": {
-    "@vaadin/polymer-legacy-adapter": "22.0.1",
     "@babel/core": "^7.5.5",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@babel/preset-env": "^7.5.5",
@@ -61,6 +60,7 @@
     "@polymer/test-fixture": "^4.0.2",
     "@types/vis": "^4.21.16",
     "@vaadin-component-factory/vcf-element-util": "^0.1.4",
+    "@vaadin/polymer-legacy-adapter": "22.0.1",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
