@@ -17,12 +17,12 @@
 import { html, PolymerElement } from '@polymer/polymer/polymer-element';
 import { ThemableMixin } from '@vaadin/vaadin-themable-mixin';
 import { ElementMixin } from '@vaadin/component-base/src/element-mixin';
-import { OverlayElement } from '@vaadin/vaadin-overlay/src/vaadin-overlay.js';
+import { Overlay } from '@vaadin/overlay/src/vaadin-overlay.js';
 import '@vaadin/polymer-legacy-adapter/template-renderer.js';
-import '@vaadin/vaadin-overlay';
+import '@vaadin/overlay';
 import '@polymer/iron-media-query';
 
-class PopupOverlayElement extends OverlayElement {
+class PopupOverlayElement extends Overlay {
   static get is() {
     return 'vcf-popup-overlay';
   }
@@ -111,7 +111,11 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   ready() {
     super.ready();
-    this.$.popupOverlay.template = this.querySelector('template');
+    // this.$.popupOverlay.template = this.querySelector('template');
+    const content = this.querySelector('template').innerHTML;
+    this.$.popupOverlay.renderer = root => {
+      root.innerHTML = content;
+    };
     this.$.popupOverlay.addEventListener('vaadin-overlay-open', () => this._popupOpenChanged(true));
     this.$.popupOverlay.addEventListener('vaadin-overlay-close', () => this._popupOpenChanged(false));
     if (this.closeOnClick) {
