@@ -1,6 +1,6 @@
 {
   "name": "@vaadin-component-factory/vcf-popup",
-  "version": "2.0.0",
+  "version": "23.3.0",
   "description": "Vaadin Component Factory Popup for Polymer 3",
   "main": "theme/lumo/vcf-popup.js",
   "author": "Vaadin Ltd",
@@ -45,15 +45,15 @@
     "@polymer/iron-icon": "^3.0.1",
     "@polymer/iron-media-query": "^3.0.1",
     "@polymer/polymer": "^3.0.0",
-    "@vaadin/vaadin-button": "^22.0.1",
-    "@vaadin/component-base": "^22.0.1",
-    "@vaadin/vaadin-icons": "^4.3.1",
-    "@vaadin/vaadin-lumo-styles": "^22.0.1",
-    "@vaadin/vaadin-overlay": "^22.0.1",
-    "@vaadin/vaadin-themable-mixin": "^22.0.1"
+    "@vaadin/vaadin-button": "^23.3.12",
+    "@vaadin/component-base": "^23.3.12",
+    "@vaadin/vaadin-icons": "^23.3.12",
+    "@vaadin/vaadin-lumo-styles": "^23.3.12",
+    "@vaadin/vaadin-overlay": "^23.3.12",
+    "@vaadin/vaadin-themable-mixin": "^23.3.12"
   },
   "devDependencies": {
-    "@vaadin/polymer-legacy-adapter": "22.0.1",
+    "@vaadin/polymer-legacy-adapter": "^23.3.12",
     "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
     "@polymer/test-fixture": "^4.0.2",
     "@types/vis": "^4.21.16",
