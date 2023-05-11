@@ -14,13 +14,13 @@
  * the License.
  */
 
-import { html, PolymerElement } from '@polymer/polymer/polymer-element';
-import { ThemableMixin } from '@vaadin/vaadin-themable-mixin';
-import { ElementMixin } from '@vaadin/component-base/src/element-mixin';
-import { OverlayElement } from '@vaadin/vaadin-overlay/src/vaadin-overlay.js';
 import '@vaadin/polymer-legacy-adapter/template-renderer.js';
 import '@vaadin/vaadin-overlay';
 import '@polymer/iron-media-query';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element';
+import { ElementMixin } from '@vaadin/component-base/src/element-mixin';
+import { OverlayElement } from '@vaadin/vaadin-overlay/src/vaadin-overlay.js';
+import { ThemableMixin } from '@vaadin/vaadin-themable-mixin';
 
 class PopupOverlayElement extends OverlayElement {
   static get is() {
