@@ -15,14 +15,14 @@
  */
 
 import '@vaadin/polymer-legacy-adapter/template-renderer.js';
-import '@vaadin/vaadin-overlay';
 import '@polymer/iron-media-query';
+import '@vaadin/overlay';
 import { html, PolymerElement } from '@polymer/polymer/polymer-element';
 import { ElementMixin } from '@vaadin/component-base/src/element-mixin';
-import { OverlayElement } from '@vaadin/vaadin-overlay/src/vaadin-overlay';
+import { Overlay } from '@vaadin/overlay/src/vaadin-overlay';
 import { ThemableMixin } from '@vaadin/vaadin-themable-mixin';
 
-class PopupOverlayElement extends OverlayElement {
+class PopupOverlayElement extends Overlay {
   static get is() {
     return 'vcf-popup-overlay';
   }

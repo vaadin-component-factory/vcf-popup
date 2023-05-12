@@ -42,14 +42,14 @@
     ]
   },
   "dependencies": {
-    "@polymer/iron-icon": "^3.0.1",
     "@polymer/iron-media-query": "^3.0.1",
     "@polymer/polymer": "^3.0.0",
-    "@vaadin/vaadin-button": "^23.3.12",
+    "@vaadin/button": "^23.3.12",
     "@vaadin/component-base": "^23.3.12",
-    "@vaadin/vaadin-icons": "^23.3.12",
+    "@vaadin/icon": "^23.3.12",
+    "@vaadin/icons": "^23.3.12",
+    "@vaadin/overlay": "^23.3.12",
     "@vaadin/vaadin-lumo-styles": "^23.3.12",
-    "@vaadin/vaadin-overlay": "^23.3.12",
     "@vaadin/vaadin-themable-mixin": "^23.3.12"
   },
   "devDependencies": {
