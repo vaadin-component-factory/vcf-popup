@@ -16,19 +16,10 @@
 
 import '@vaadin/polymer-legacy-adapter/template-renderer.js';
 import '@polymer/iron-media-query';
-import '@vaadin/overlay';
+import './vcf-popup-overlay';
 import { html, PolymerElement } from '@polymer/polymer/polymer-element';
 import { ElementMixin } from '@vaadin/component-base/src/element-mixin';
-import { Overlay } from '@vaadin/overlay/src/vaadin-overlay';
 import { ThemableMixin } from '@vaadin/vaadin-themable-mixin';
-
-class PopupOverlayElement extends Overlay {
-  static get is() {
-    return 'vcf-popup-overlay';
-  }
-}
-
-customElements.define(PopupOverlayElement.is, PopupOverlayElement);
 
 class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   static get template() {
@@ -41,6 +32,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
       <vcf-popup-overlay
         id="popupOverlay"
+        header-title="[[headerTitle]]"
         opened="{{opened}}"
         theme$="[[theme]]"
         with-backdrop="[[_phone]]"
@@ -80,6 +72,44 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         reflectToAttribute: true
       },
 
+      /**
+       * String used for rendering a popup title.
+       *
+       * If both `headerTitle` and `headerRenderer` are defined, the title
+       * and the elements created by the renderer will be placed next to
+       * each other, with the title coming first.
+       *
+       * When `headerTitle` is set, the attribute `has-title` is added to the overlay element.
+       * @attr {string} header-title
+       */
+      headerTitle: String,
+
+      /**
+       * Custom function for rendering the popup header.
+       * Receives two arguments:
+       *
+       * - `root` The root container DOM element. Append your content to it.
+       * - `popup` The reference to the `<vcf-popup>` element.
+       *
+       * If both `headerTitle` and `headerRenderer` are defined, the title
+       * and the elements created by the renderer will be placed next to
+       * each other, with the title coming first.
+       *
+       * When `headerRenderer` is set, the attribute `has-header` is added to the overlay element.
+       */
+      headerRenderer: Function,
+
+      /**
+       * Custom function for rendering the popup footer.
+       * Receives two arguments:
+       *
+       * - `root` The root container DOM element. Append your content to it.
+       * - `popup` The reference to the `<vcf-popup>` element.
+       *
+       * When `footerRenderer` is set, the attribute `has-footer` is added to the overlay element.
+       */
+      footerRenderer: Function,
+
       _targetElement: {
         type: Object
       },
@@ -100,7 +130,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   static get observers() {
-    return ['_attachToTarget(for)'];
+    return ['_openedChanged(opened)', '_attachToTarget(for)', '_rendererChanged(headerRenderer, footerRenderer)'];
   }
 
   constructor() {
@@ -119,12 +149,35 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     }
   }
 
+  /**
+   * Requests an update for the content of the popup.
+   * While performing the update, it invokes the renderer passed in the `renderer` property,
+   * as well as `headerRender` and `footerRenderer` properties, if these are defined.
+   *
+   * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
+   */
+  requestContentUpdate() {
+    if (this.$) {
+      this.$.popupOverlay.requestContentUpdate();
+    }
+  }
+
+  /** @private */
+  _rendererChanged(headerRenderer, footerRenderer) {
+    this.$.popupOverlay.setProperties({ owner: this, headerRenderer, footerRenderer });
+  }
+
   connectedCallback() {
+    super.connectedCallback();
+
     if (!this._targetElement) {
       this._targetElement = this.parentNode.querySelector(`#${this.for}`);
     }
     this._attachToTarget();
-    super.connectedCallback();
+    // Restore opened state if overlay was opened when disconnecting
+    if (this.__restoreOpened) {
+      this.opened = true;
+    }
   }
 
   disconnectedCallback() {
@@ -133,6 +186,13 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     if (this.closeOnClick) {
       this.$.popupOverlay.removeEventListener('click', this._boundHide);
     }
+    // Close overlay and memorize opened state
+    this.__restoreOpened = this.opened;
+    this.opened = false;
+  }
+
+  _openedChanged(opened) {
+    this.$.popupOverlay.opened = opened;
   }
 
   show() {

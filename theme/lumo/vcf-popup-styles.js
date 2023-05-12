@@ -58,25 +58,3 @@ popupTheme.innerHTML = `
     </template>
   `;
 popupTheme.register(popupTheme.id);
-
-const overlayTheme = document.createElement('dom-module');
-overlayTheme.id = 'vcf-vaadin-overlay-lumo';
-overlayTheme.setAttribute('theme-for', 'vcf-popup-overlay');
-overlayTheme.innerHTML = `
-    <template>
-      <style>
-				:host {
-					align-items: flex-start;
-					justify-content: flex-start;
-					right: auto;
-					position: absolute;
-					bottom: auto;
-				}
-
-				[part="content"] {
-					padding: 0;
-				}
-      </style>
-    </template>
-  `;
-overlayTheme.register(overlayTheme.id);
