@@ -2,7 +2,7 @@ import '@vaadin/vaadin-lumo-styles/spacing.js';
 import { overlay } from '@vaadin/vaadin-lumo-styles/mixins/overlay.js';
 import { css, registerStyles } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
 
-const dialogOverlay = css`
+const popupOverlay = css`
   :host {
     align-items: flex-start;
     justify-content: flex-start;
@@ -27,7 +27,7 @@ const dialogOverlay = css`
   }
 
   [part='header'] {
-    padding: var(--lumo-space-m);
+    padding: var(--lumo-space-s);
     background-color: var(--lumo-base-color);
     border-radius: var(--lumo-border-radius-l) var(--lumo-border-radius-l) 0 0; /* Needed for Safari */
   }
@@ -52,4 +52,4 @@ const dialogOverlay = css`
   }
 `;
 
-registerStyles('vcf-popup-overlay', [overlay, dialogOverlay], { moduleId: 'lumo-vcf-popup-overlay' });
+registerStyles('vcf-popup-overlay', [overlay, popupOverlay], { moduleId: 'lumo-vcf-popup-overlay' });
