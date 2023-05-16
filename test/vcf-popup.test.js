@@ -1,5 +1,6 @@
 import { expect } from '@esm-bundle/chai';
 import { fixtureSync, nextRender } from '@vaadin/testing-helpers';
+import { setViewport } from '@web/test-runner-commands';
 import '../theme/lumo/vcf-popup.js';
 
 describe('vcf-popup', () => {
@@ -127,6 +128,26 @@ describe('vcf-popup', () => {
       popup.opened = true;
       await nextRender();
       overlay.click();
+      await nextRender();
+
+      expect(popup.opened).to.be.false;
+    });
+  });
+
+  describe('phone', () => {
+    let popup, overlay, backdrop;
+
+    beforeEach(async () => {
+      await setViewport({ width: 393, height: 850 });
+      popup = fixtureSync('<vcf-popup><template>Something</template></vcf-popup>');
+      overlay = popup.shadowRoot.querySelector('vcf-popup-overlay');
+      backdrop = overlay.shadowRoot.querySelector('#backdrop');
+    });
+
+    it('should hide on backdrop click', async () => {
+      popup.opened = true;
+      await nextRender();
+      backdrop.click();
       await nextRender();
 
       expect(popup.opened).to.be.false;

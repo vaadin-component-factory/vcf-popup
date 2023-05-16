@@ -204,7 +204,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   _handleOverlayClick(event) {
-    if (!this.closeOnClick) {
+    if (!this.closeOnClick && !this._phone) {
       event.stopPropagation();
     }
   }
