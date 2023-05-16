@@ -130,9 +130,9 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   constructor() {
     super();
-    this._boundShow = this.show.bind(this);
-    this._boundHide = this.hide.bind(this);
-    this._boundOverlayClickHandler = this._handleOverlayClick.bind(this);
+    this.show = this.show.bind(this);
+    this.hide = this.hide.bind(this);
+    this._handleOverlayClick = this._handleOverlayClick.bind(this);
   }
 
   ready() {
@@ -140,7 +140,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     this.$.popupOverlay.template = this.querySelector('template');
     this.$.popupOverlay.addEventListener('vaadin-overlay-open', () => this._popupOpenChanged(true));
     this.$.popupOverlay.addEventListener('vaadin-overlay-close', () => this._popupOpenChanged(false));
-    this.$.popupOverlay.addEventListener('click', this._boundOverlayClickHandler);
+    this.$.popupOverlay.addEventListener('click', this._handleOverlayClick);
   }
 
   /**
@@ -177,7 +177,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   disconnectedCallback() {
     super.disconnectedCallback();
     this._detachFromTarget();
-    this.$.popupOverlay.removeEventListener('click', this._boundOverlayClickHandler);
+    this.$.popupOverlay.removeEventListener('click', this._handleOverlayClick);
     // Close overlay and memorize opened state
     this.__restoreOpened = this.opened;
     this.opened = false;
@@ -187,10 +187,10 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     this.$.popupOverlay.opened = opened;
     if (opened) {
       setTimeout(() => {
-        document.addEventListener('click', this._boundHide);
+        document.addEventListener('click', this.hide);
       });
     } else {
-      document.removeEventListener('click', this._boundHide);
+      document.removeEventListener('click', this.hide);
     }
   }
 
@@ -213,12 +213,12 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     if (!this._targetElement) {
       return;
     }
-    this._targetElement.addEventListener('click', this._boundShow);
+    this._targetElement.addEventListener('click', this.show);
   }
 
   _detachFromTarget() {
     if (this._targetElement) {
-      this._targetElement.removeEventListener('click', this._boundShow);
+      this._targetElement.removeEventListener('click', this.show);
     }
   }
 
