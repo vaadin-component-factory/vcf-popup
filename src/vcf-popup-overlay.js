@@ -69,19 +69,6 @@ registerStyles(
       height: auto;
     }
 
-    @media (min-height: 320px) {
-      :host(:is([has-title], [has-header], [has-footer])) .resizer-container {
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-      }
-
-      :host(:is([has-title], [has-header], [has-footer])) [part='content'] {
-        flex: 1;
-        overflow: auto;
-      }
-    }
-
     [part='content'] {
       min-width: 5em;
     }
@@ -105,15 +92,10 @@ class PopupOverlayElement extends Overlay {
       memoizedTemplate = super.template.cloneNode(true);
       const contentPart = memoizedTemplate.content.querySelector('[part="content"]');
       const overlayPart = memoizedTemplate.content.querySelector('[part="overlay"]');
-      const resizerContainer = document.createElement('section');
-      resizerContainer.id = 'resizerContainer';
-      resizerContainer.classList.add('resizer-container');
-      resizerContainer.appendChild(contentPart);
-      overlayPart.appendChild(resizerContainer);
 
       const headerContainer = document.createElement('header');
       headerContainer.setAttribute('part', 'header');
-      resizerContainer.insertBefore(headerContainer, contentPart);
+      overlayPart.appendChild(headerContainer, contentPart);
 
       const titleContainer = document.createElement('div');
       titleContainer.setAttribute('part', 'title');
@@ -131,9 +113,11 @@ class PopupOverlayElement extends Overlay {
       headerSlot.setAttribute('name', 'header-content');
       headerContentContainer.appendChild(headerSlot);
 
+      overlayPart.appendChild(contentPart);
+
       const footerContainer = document.createElement('footer');
       footerContainer.setAttribute('part', 'footer');
-      resizerContainer.appendChild(footerContainer);
+      overlayPart.appendChild(footerContainer);
 
       const footerSlot = document.createElement('slot');
       footerSlot.setAttribute('name', 'footer');
@@ -162,12 +146,6 @@ class PopupOverlayElement extends Overlay {
   /** @protected */
   ready() {
     super.ready();
-
-    // Update overflow attribute on resize
-    this.__resizeObserver = new ResizeObserver(() => {
-      this.__updateOverflow();
-    });
-    this.__resizeObserver.observe(this.$.resizerContainer);
 
     // Update overflow attribute on scroll
     this.$.content.addEventListener('scroll', () => {
@@ -317,7 +295,6 @@ class PopupOverlayElement extends Overlay {
     if (overlay.style.position !== 'absolute') {
       overlay.style.position = 'absolute';
       this.setAttribute('has-bounds-set', '');
-      this.__forceSafariReflow();
     }
 
     Object.keys(parsedBounds).forEach((arg) => {
@@ -340,22 +317,6 @@ class PopupOverlayElement extends Overlay {
     const width = overlayBounds.width;
     const height = overlayBounds.height;
     return { top, left, width, height };
-  }
-
-  /**
-   * Safari 13 renders overflowing elements incorrectly.
-   * This forces it to recalculate height.
-   * @private
-   */
-  __forceSafariReflow() {
-    const scrollPosition = this.$.resizerContainer.scrollTop;
-    const overlay = this.$.overlay;
-    overlay.style.display = 'block';
-
-    requestAnimationFrame(() => {
-      overlay.style.display = '';
-      this.$.resizerContainer.scrollTop = scrollPosition;
-    });
   }
 
   /** @private */
