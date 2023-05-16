@@ -50,7 +50,8 @@
     "@vaadin/icons": "^23.3.12",
     "@vaadin/overlay": "^23.3.12",
     "@vaadin/vaadin-lumo-styles": "^23.3.12",
-    "@vaadin/vaadin-themable-mixin": "^23.3.12"
+    "@vaadin/vaadin-themable-mixin": "^23.3.12",
+    "@vaadin/grid": "^23.3.12"
   },
   "devDependencies": {
     "@vaadin/polymer-legacy-adapter": "^23.3.12",
