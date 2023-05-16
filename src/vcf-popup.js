@@ -40,7 +40,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       >
       </vcf-popup-overlay>
 
-      <iron-media-query query="[[_phoneMediaQuery]]" query-matches="{{_phone}}"> </iron-media-query>
+      <iron-media-query query="[[_phoneMediaQuery]]" query-matches="{{_phone}}"></iron-media-query>
     `;
   }
 
@@ -51,6 +51,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   static get version() {
     return '23.3.0';
   }
+
   /**
    * Object describing property-related metadata used by Polymer features
    */
@@ -122,13 +123,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     };
   }
 
-  /**
-   * @protected
-   */
-  static _finalizeClass() {
-    super._finalizeClass();
-  }
-
   static get observers() {
     return ['_openedChanged(opened)', '_attachToTarget(for)', '_rendererChanged(headerRenderer, footerRenderer)'];
   }
@@ -137,6 +131,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     super();
     this._boundShow = this.show.bind(this);
     this._boundHide = this.hide.bind(this);
+    this._boundOverlayClickHandler = this._handleOverlayClick.bind(this);
   }
 
   ready() {
@@ -144,9 +139,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     this.$.popupOverlay.template = this.querySelector('template');
     this.$.popupOverlay.addEventListener('vaadin-overlay-open', () => this._popupOpenChanged(true));
     this.$.popupOverlay.addEventListener('vaadin-overlay-close', () => this._popupOpenChanged(false));
-    if (this.closeOnClick) {
-      this.$.popupOverlay.addEventListener('click', this._boundHide);
-    }
+    this.$.popupOverlay.addEventListener('click', this._boundOverlayClickHandler);
   }
 
   /**
@@ -183,9 +176,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   disconnectedCallback() {
     super.disconnectedCallback();
     this._detachFromTarget();
-    if (this.closeOnClick) {
-      this.$.popupOverlay.removeEventListener('click', this._boundHide);
-    }
+    this.$.popupOverlay.removeEventListener('click', this._boundOverlayClickHandler);
     // Close overlay and memorize opened state
     this.__restoreOpened = this.opened;
     this.opened = false;
@@ -193,6 +184,13 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   _openedChanged(opened) {
     this.$.popupOverlay.opened = opened;
+    if (opened) {
+      setTimeout(() => {
+        document.addEventListener('click', this._boundHide);
+      });
+    } else {
+      document.removeEventListener('click', this._boundHide);
+    }
   }
 
   show() {
@@ -202,6 +200,12 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   hide() {
     this.opened = false;
+  }
+
+  _handleOverlayClick(event) {
+    if (!this.closeOnClick) {
+      event.stopPropagation();
+    }
   }
 
   _attachToTarget() {
