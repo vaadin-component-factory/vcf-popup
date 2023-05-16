@@ -37,6 +37,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         theme$="[[theme]]"
         with-backdrop="[[_phone]]"
         phone$="[[_phone]]"
+        modeless
       >
       </vcf-popup-overlay>
 

@@ -163,8 +163,6 @@ class PopupOverlayElement extends Overlay {
   ready() {
     super.ready();
 
-    this.modeless = true;
-
     // Update overflow attribute on resize
     this.__resizeObserver = new ResizeObserver(() => {
       this.__updateOverflow();
