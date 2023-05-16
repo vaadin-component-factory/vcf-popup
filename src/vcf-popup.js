@@ -39,7 +39,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         phone$="[[_phone]]"
         position-target="[[target]]"
         close-on-scroll="[[closeOnScroll]]"
-        modeless
+        modeless="[[modeless]]"
       >
       </vcf-popup-overlay>
 
@@ -92,6 +92,11 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         reflectToAttribute: true
       },
 
+      /**
+       * Will close the popup if content outside of the popup is scrolled.
+       *
+       * Note: The popup has to be 'modeless' in order closeOnScroll to have any effect.
+       */
       closeOnScroll: {
         type: Boolean,
         value: false,
@@ -135,6 +140,16 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
        * When `footerRenderer` is set, the attribute `has-footer` is added to the overlay element.
        */
       footerRenderer: Function,
+
+      /**
+       * When true the overlay won't disable the main content, showing
+       * it doesn’t change the functionality of the user interface.
+       */
+      modeless: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
 
       _phone: Boolean,
 

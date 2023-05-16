@@ -57,6 +57,23 @@
     </template>
   </vcf-popup>
 
+  <vaadin-button id='modeless' >
+    Modeless
+  </vaadin-button>
+  <vcf-popup modeless for='modeless'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 10px;
+          max-width: 400px;
+        }
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
+      </div>
+    </template>
+  </vcf-popup>
+
   <vaadin-button id='header-only' >
     Header only
   </vaadin-button>

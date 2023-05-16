@@ -17,7 +17,12 @@ export class GridVcfPopupIntegrationDemo extends LitElement {
             theme="tertiary-inline"
             >${person.id}
           </vaadin-button>
-          <vcf-popup close-on-scroll for="popupBtn${person.id}" header-title="${person.firstName} ${person.lastName} ">
+          <vcf-popup
+            modeless
+            close-on-scroll
+            for="popupBtn${person.id}"
+            header-title="${person.firstName} ${person.lastName} "
+          >
             <template>
               <style>
                 #container {

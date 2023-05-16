@@ -35,16 +35,52 @@ describe('vcf-popup', () => {
   });
 
   describe('opened', () => {
+    let target, popup, overlay, overlayPart;
+
+    beforeEach(() => {
+      const pageSetup = fixtureSync(`<div>
+            <div id='target-element'></div>
+            <vcf-popup for='target-element'></vcf-popup>
+        </div`);
+      target = pageSetup.querySelector('#target-element');
+      popup = pageSetup.querySelector('vcf-popup[for="target-element"]');
+      overlay = popup.shadowRoot.querySelector('vcf-popup-overlay');
+      overlayPart = overlay.shadowRoot.children.overlay;
+    });
+
+    it('should open on target click', async () => {
+      target.click();
+      await nextRender();
+      expect(popup.opened).to.be.true;
+    });
+
+    it('should disable pointer events', async () => {
+      target.click();
+      await nextRender();
+
+      expect(getComputedStyle(target).pointerEvents).to.equal('none');
+    });
+
+    it('should not hide on overlay click', async () => {
+      target.click();
+      await nextRender();
+      overlayPart.click();
+      await nextRender();
+
+      expect(popup.opened).to.be.true;
+    });
+  });
+
+  describe('modeless', () => {
     let outsideElement, targetOne, popupOne, overlayOne, targetTwo, popupTwo;
 
     beforeEach(() => {
       const pageSetup = fixtureSync(`<div>
             <div id='outside-element'></div>
             <div id='target-element-one'></div>
-            <vcf-popup for='target-element-one'></vcf-popup>
+            <vcf-popup modeless for='target-element-one'></vcf-popup>
             <div id='target-element-two'></div>
-            <vcf-popup for='target-element-two'></vcf-popup>
-            <vcf-popup></vcf-popup>
+            <vcf-popup modeless for='target-element-two'></vcf-popup>
         </div`);
       outsideElement = pageSetup.querySelector('#outside-element');
       targetOne = pageSetup.querySelector('#target-element-one');
@@ -94,16 +130,7 @@ describe('vcf-popup', () => {
       targetOne.click();
       await nextRender();
 
-      expect(popupTwo.opened).to.be.false;
-    });
-
-    it('should hide on another click of target', async () => {
-      targetOne.click();
-      await nextRender();
-      targetOne.click();
-      await nextRender();
-
-      expect(popupTwo.opened).to.be.false;
+      expect(popupOne.opened).to.be.false;
     });
 
     it('should not hide on overlay click', async () => {
