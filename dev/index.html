@@ -97,6 +97,23 @@
     </template>
   </vcf-popup>
 
+  <vaadin-button id='close-on-scroll' >
+    Close on scroll
+  </vaadin-button>
+  <vcf-popup close-on-scroll for='close-on-scroll'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 10px;
+          max-width: 400px;
+        }
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
+      </div>
+    </template>
+  </vcf-popup>
+
   <vaadin-button id='header-content-only' >
     Content in header
   </vaadin-button>

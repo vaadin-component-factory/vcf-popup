@@ -37,6 +37,8 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         theme$="[[theme]]"
         with-backdrop="[[_phone]]"
         phone$="[[_phone]]"
+        position-target="[[target]]"
+        close-on-scroll="[[closeOnScroll]]"
         modeless
       >
       </vcf-popup-overlay>
@@ -64,11 +66,33 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         reflectToAttribute: true
       },
 
+      /**
+       * The id of the element used as a tooltip trigger.
+       * The element should be in the DOM by the time when
+       * the attribute is set, otherwise a warning is shown.
+       */
       for: {
-        type: String
+        type: String,
+        observer: '__forChanged'
+      },
+
+      /**
+       * Reference to the element used as a tooltip trigger.
+       * The target must be placed in the same shadow scope.
+       * Defaults to an element referenced with `for`.
+       */
+      target: {
+        type: Object,
+        observer: '__targetChanged'
       },
 
       closeOnClick: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+
+      closeOnScroll: {
         type: Boolean,
         value: false,
         reflectToAttribute: true
@@ -112,10 +136,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
        */
       footerRenderer: Function,
 
-      _targetElement: {
-        type: Object
-      },
-
       _phone: Boolean,
 
       _phoneMediaQuery: {
@@ -125,7 +145,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   static get observers() {
-    return ['_openedChanged(opened)', '_attachToTarget(for)', '_rendererChanged(headerRenderer, footerRenderer)'];
+    return ['_openedChanged(opened)', '_rendererChanged(headerRenderer, footerRenderer)'];
   }
 
   constructor() {
@@ -164,10 +184,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   connectedCallback() {
     super.connectedCallback();
 
-    if (!this._targetElement) {
-      this._targetElement = this.parentNode.querySelector(`#${this.for}`);
-    }
-    this._attachToTarget();
     // Restore opened state if overlay was opened when disconnecting
     if (this.__restoreOpened) {
       this.opened = true;
@@ -176,7 +192,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._detachFromTarget();
+    this._detachFromTarget(this.target);
     this.$.popupOverlay.removeEventListener('click', this._handleOverlayClick);
     // Close overlay and memorize opened state
     this.__restoreOpened = this.opened;
@@ -191,6 +207,29 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       });
     } else {
       document.removeEventListener('click', this.hide);
+    }
+  }
+
+  __forChanged(forId) {
+    if (forId) {
+      const target = this.getRootNode().getElementById(forId);
+
+      if (target) {
+        this.target = target;
+        this._attachToTarget(this.target);
+      } else {
+        console.warn(`No element with id="${forId}" found to show popup.`);
+      }
+    }
+  }
+
+  __targetChanged(target, oldTarget) {
+    if (oldTarget) {
+      this._detachFromTarget(oldTarget);
+    }
+
+    if (target) {
+      this._attachToTarget(target);
     }
   }
 
@@ -209,21 +248,21 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     }
   }
 
-  _attachToTarget() {
-    if (!this._targetElement) {
+  _attachToTarget(target) {
+    if (!target) {
       return;
     }
-    this._targetElement.addEventListener('click', this.show);
+    target.addEventListener('click', this.show);
   }
 
-  _detachFromTarget() {
-    if (this._targetElement) {
-      this._targetElement.removeEventListener('click', this.show);
+  _detachFromTarget(target) {
+    if (target) {
+      target.removeEventListener('click', this.show);
     }
   }
 
   _setPosition() {
-    const targetBoundingRect = this._targetElement.getBoundingClientRect();
+    const targetBoundingRect = this.target.getBoundingClientRect();
     const overlayRect = this.$.popupOverlay.getBoundingClientRect();
     const positionLeft = targetBoundingRect.left;
     const positionTop = targetBoundingRect.top + targetBoundingRect.height + window.pageYOffset;

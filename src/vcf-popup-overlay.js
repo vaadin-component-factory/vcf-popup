@@ -16,6 +16,7 @@
 
 import '@vaadin/polymer-legacy-adapter/template-renderer.js';
 import '@vaadin/overlay';
+import { getAncestorRootNodes } from '@vaadin/component-base/src/dom-utils';
 import { Overlay } from '@vaadin/overlay/src/vaadin-overlay';
 import { css, registerStyles } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin';
 
@@ -126,21 +127,56 @@ class PopupOverlayElement extends Overlay {
     return memoizedTemplate;
   }
 
-  static get observers() {
-    return [
-      '_headerFooterRendererChange(headerRenderer, footerRenderer, opened)',
-      '_headerTitleChanged(headerTitle, opened)'
-    ];
-  }
-
   static get properties() {
     return {
+      /**
+       * The element next to which this overlay should be aligned.
+       */
+      positionTarget: {
+        type: Object,
+        value: null
+      },
+
+      closeOnScroll: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+
       headerTitle: String,
 
       headerRenderer: Function,
 
       footerRenderer: Function
     };
+  }
+
+  static get observers() {
+    return [
+      '_headerFooterRendererChange(headerRenderer, footerRenderer, opened)',
+      '_headerTitleChanged(headerTitle, opened)',
+      '__overlayOpenedChanged(opened, positionTarget)'
+    ];
+  }
+
+  constructor() {
+    super();
+
+    this.__onScroll = this.__onScroll.bind(this);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    if (this.opened) {
+      this.__addUpdatePositionEventListeners();
+    }
+  }
+
+  /** @protected */
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.__removeUpdatePositionEventListeners();
   }
 
   /** @protected */
@@ -342,6 +378,39 @@ class PopupOverlayElement extends Overlay {
       this.setAttribute('overflow', value);
     } else if (value.length === 0 && this.hasAttribute('overflow')) {
       this.removeAttribute('overflow');
+    }
+  }
+
+  __addUpdatePositionEventListeners() {
+    this.__positionTargetAncestorRootNodes = getAncestorRootNodes(this.positionTarget);
+    this.__positionTargetAncestorRootNodes.forEach((node) => {
+      node.addEventListener('scroll', this.__onScroll, true);
+    });
+  }
+
+  /** @private */
+  __removeUpdatePositionEventListeners() {
+    if (this.__positionTargetAncestorRootNodes) {
+      this.__positionTargetAncestorRootNodes.forEach((node) => {
+        node.removeEventListener('scroll', this.__onScroll, true);
+      });
+      this.__positionTargetAncestorRootNodes = null;
+    }
+  }
+
+  __overlayOpenedChanged(opened, positionTarget) {
+    this.__removeUpdatePositionEventListeners();
+
+    if (positionTarget && opened) {
+      this.__addUpdatePositionEventListeners();
+    }
+  }
+
+  /** @private */
+  __onScroll(e) {
+    // If the scroll event occurred inside the overlay, ignore it.
+    if (!this.contains(e.target) && this.closeOnScroll) {
+      this.opened = false;
     }
   }
 }
