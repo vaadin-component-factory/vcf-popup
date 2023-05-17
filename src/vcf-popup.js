@@ -168,6 +168,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
     this._handleOverlayClick = this._handleOverlayClick.bind(this);
+    this._outsideClickListener = this._outsideClickListener.bind(this);
   }
 
   ready() {
@@ -221,11 +222,16 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     this.$.popupOverlay.opened = opened;
     if (opened) {
       setTimeout(() => {
-        document.addEventListener('click', this.hide);
+        document.addEventListener('click', this._outsideClickListener);
       });
     } else {
-      document.removeEventListener('click', this.hide);
+      document.removeEventListener('click', this._outsideClickListener);
     }
+  }
+
+  _outsideClickListener(event) {
+    this.$.popupOverlay.close(event); // to trigger vaadin-overlay-close event
+    this.hide();
   }
 
   __forChanged(forId) {
@@ -279,23 +285,25 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   _setPosition() {
-    const targetBoundingRect = this.target.getBoundingClientRect();
-    const overlayRect = this.$.popupOverlay.getBoundingClientRect();
-    const positionLeft = targetBoundingRect.left;
-    const positionTop = targetBoundingRect.top + targetBoundingRect.height + window.pageYOffset;
+    if (this.target) {
+      const targetBoundingRect = this.target.getBoundingClientRect();
+      const overlayRect = this.$.popupOverlay.getBoundingClientRect();
+      const positionLeft = targetBoundingRect.left;
+      const positionTop = targetBoundingRect.top + targetBoundingRect.height + window.pageYOffset;
 
-    if (positionLeft + overlayRect.width > window.innerWidth) {
-      this.$.popupOverlay.style.right = '0px';
-      this.$.popupOverlay.style.left = 'auto';
-    } else {
-      this.$.popupOverlay.style.left = `${Math.max(0, positionLeft)}px`;
-      this.$.popupOverlay.style.right = 'auto';
-    }
+      if (positionLeft + overlayRect.width > window.innerWidth) {
+        this.$.popupOverlay.style.right = '0px';
+        this.$.popupOverlay.style.left = 'auto';
+      } else {
+        this.$.popupOverlay.style.left = `${Math.max(0, positionLeft)}px`;
+        this.$.popupOverlay.style.right = 'auto';
+      }
 
-    if (positionTop + overlayRect.height > window.innerHeight + window.pageYOffset) {
-      this.$.popupOverlay.style.top = `${positionTop - targetBoundingRect.height - overlayRect.height}px`;
-    } else {
-      this.$.popupOverlay.style.top = `${positionTop}px`;
+      if (positionTop + overlayRect.height > window.innerHeight + window.pageYOffset) {
+        this.$.popupOverlay.style.top = `${positionTop - targetBoundingRect.height - overlayRect.height}px`;
+      } else {
+        this.$.popupOverlay.style.top = `${positionTop}px`;
+      }
     }
   }
 

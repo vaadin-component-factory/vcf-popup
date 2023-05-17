@@ -1,6 +1,8 @@
 import { expect } from '@esm-bundle/chai';
-import { fixtureSync, nextRender } from '@vaadin/testing-helpers';
+import { fixtureSync, listenOnce, nextRender } from '@vaadin/testing-helpers';
+import { aTimeout } from '@vaadin/testing-helpers/dist/utils';
 import { setViewport } from '@web/test-runner-commands';
+import sinon from 'sinon';
 import '../theme/lumo/vcf-popup.js';
 
 describe('vcf-popup', () => {
@@ -158,6 +160,59 @@ describe('vcf-popup', () => {
       await nextRender();
 
       expect(popup.opened).to.be.false;
+    });
+  });
+
+  describe('popup-open-changed event', () => {
+    let popup, overlay, spy;
+
+    beforeEach(() => {
+      popup = fixtureSync('<vcf-popup><template>Something</template></vcf-popup>');
+      overlay = popup.shadowRoot.querySelector('vcf-popup-overlay');
+      spy = sinon.spy();
+      popup.addEventListener('popup-open-changed', spy);
+    });
+
+    it('should dispatch opened event', async () => {
+      popup.opened = true;
+      await nextRender();
+
+      expect(spy.calledOnce).to.be.true;
+      expect(spy.getCall(0).args[0].detail.opened).to.be.true;
+    });
+
+    it('should dispatch closed event', async () => {
+      popup.show();
+      await nextRender();
+      document.body.click();
+      await nextRender();
+
+      expect(spy.callCount).to.equal(2);
+      expect(spy.getCall(1).args[0].detail.opened).to.be.false;
+    });
+
+    describe('modeless', () => {
+      beforeEach(() => {
+        popup.modeless = true;
+      });
+
+      it('should dispatch opened event', async () => {
+        popup.opened = true;
+        await nextRender();
+
+        expect(spy.calledOnce).to.be.true;
+        expect(spy.getCall(0).args[0].detail.opened).to.be.true;
+      });
+
+      it('should dispatch closed event', async () => {
+        popup.show();
+        await nextRender();
+        document.body.click();
+        await nextRender();
+
+        expect(spy.callCount).to.equal(2);
+        expect(spy.getCall(1).args[0].detail.opened).to.be.false;
+      });
     });
   });
 
