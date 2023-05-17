@@ -308,11 +308,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   _popupOpenChanged(isOpened) {
-    if (isOpened) {
-      window.addEventListener('scroll', this._boundSetPosition, true);
-    } else {
-      window.removeEventListener('scroll', this._boundSetPosition, true);
-    }
     this.dispatchEvent(
       new CustomEvent('popup-open-changed', {
         detail: {
