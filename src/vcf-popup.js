@@ -199,6 +199,8 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   connectedCallback() {
     super.connectedCallback();
 
+    this._attachToTarget(this.target);
+
     // Restore opened state if overlay was opened when disconnecting
     if (this.__restoreOpened) {
       this.opened = true;
@@ -207,9 +209,10 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+
     this._detachFromTarget(this.target);
-    this.$.popupOverlay.removeEventListener('click', this._handleOverlayClick);
-    // Close overlay and memorize opened state
+
+    // Close overlay to clear document listener; also memorize opened state
     this.__restoreOpened = this.opened;
     this.opened = false;
   }
@@ -231,7 +234,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
       if (target) {
         this.target = target;
-        this._attachToTarget(this.target);
       } else {
         console.warn(`No element with id="${forId}" found to show popup.`);
       }
