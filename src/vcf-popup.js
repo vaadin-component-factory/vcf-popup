@@ -63,7 +63,8 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       opened: {
         type: Boolean,
         value: false,
-        reflectToAttribute: true
+        reflectToAttribute: true,
+        observer: '_openedChanged'
       },
 
       /**
@@ -160,22 +161,20 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   static get observers() {
-    return ['_openedChanged(opened)', '_rendererChanged(headerRenderer, footerRenderer)'];
+    return ['_rendererChanged(headerRenderer, footerRenderer)'];
   }
 
   constructor() {
     super();
+
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
     this._handleOverlayClick = this._handleOverlayClick.bind(this);
-    this._outsideClickListener = this._outsideClickListener.bind(this);
   }
 
   ready() {
     super.ready();
     this.$.popupOverlay.template = this.querySelector('template');
-    this.$.popupOverlay.addEventListener('vaadin-overlay-open', () => this._popupOpenChanged(true));
-    this.$.popupOverlay.addEventListener('vaadin-overlay-close', () => this._popupOpenChanged(false));
     this.$.popupOverlay.addEventListener('click', this._handleOverlayClick);
   }
 
@@ -199,7 +198,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   connectedCallback() {
     super.connectedCallback();
-
     this._attachToTarget(this.target);
 
     // Restore opened state if overlay was opened when disconnecting
@@ -210,7 +208,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-
     this._detachFromTarget(this.target);
 
     // Close overlay to clear document listener; also memorize opened state
@@ -218,20 +215,25 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     this.opened = false;
   }
 
-  _openedChanged(opened) {
-    this.$.popupOverlay.opened = opened;
+  _openedChanged(opened, oldValue) {
     if (opened) {
       setTimeout(() => {
-        document.addEventListener('click', this._outsideClickListener);
+        document.addEventListener('click', this.hide);
       });
     } else {
-      document.removeEventListener('click', this._outsideClickListener);
+      document.removeEventListener('click', this.hide);
     }
-  }
 
-  _outsideClickListener(event) {
-    this.$.popupOverlay.close(event); // to trigger vaadin-overlay-close event
-    this.hide();
+    // avoid dispatching event when setting initial value 'false'
+    if (oldValue !== undefined) {
+      this.dispatchEvent(
+        new CustomEvent('popup-open-changed', {
+          detail: {
+            opened: opened
+          }
+        })
+      );
+    }
   }
 
   __forChanged(forId) {
@@ -305,16 +307,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         this.$.popupOverlay.style.top = `${positionTop}px`;
       }
     }
-  }
-
-  _popupOpenChanged(isOpened) {
-    this.dispatchEvent(
-      new CustomEvent('popup-open-changed', {
-        detail: {
-          opened: isOpened
-        }
-      })
-    );
   }
 }
 

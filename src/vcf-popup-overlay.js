@@ -449,7 +449,6 @@ class PopupOverlayElement extends Overlay {
   __onScroll(e) {
     // If the scroll event occurred inside the overlay, ignore it.
     if (!this.contains(e.target) && this.closeOnScroll) {
-      this.close(e); // to trigger vaadin-overlay-close event
       this.opened = false;
     }
   }
