@@ -70,11 +70,15 @@ registerStyles(
       height: auto;
     }
 
+    .resizer-container {
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
     @media (min-height: 320px) {
       :host(:is([has-title], [has-header], [has-footer])) .resizer-container {
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
       }
 
       :host(:is([has-title], [has-header], [has-footer])) [part='content'] {
