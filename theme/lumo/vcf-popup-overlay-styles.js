@@ -42,6 +42,53 @@ const popupOverlay = css`
       box-shadow: 0 1px 0 0 var(--lumo-contrast-10pct);
     }
   }
+
+  :host([phone]) {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: var(--vaadin-overlay-viewport-bottom, 0) !important;
+    left: 0 !important;
+    align-items: stretch !important;
+    justify-content: flex-end !important;
+  }
+
+  :host([phone]) [part='overlay'] {
+    max-height: 50vh;
+    width: 100vw;
+    border-radius: 0;
+    box-shadow: var(--lumo-box-shadow-xl);
+  }
+
+  /* The content part scrolls instead of the overlay part, because of the gradient fade-out */
+
+  :host([phone]) [part='content'] {
+    padding: 30px var(--lumo-space-m);
+    max-height: inherit;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+    overflow: auto;
+    -webkit-mask-image: linear-gradient(transparent, #000 20px, #000 calc(100% - 40px), transparent);
+    mask-image: linear-gradient(transparent, #000 20px, #000 calc(100% - 40px), transparent);
+  }
+
+  :host([phone]) [part='backdrop'] {
+    display: block;
+  }
+
+  /* Animations */
+
+  :host([opening][phone]) [part='overlay'] {
+    animation: 0.2s lumo-mobile-menu-overlay-enter cubic-bezier(0.215, 0.61, 0.355, 1) both;
+  }
+
+  :host([closing][phone]),
+  :host([closing][phone]) [part='backdrop'] {
+    animation-delay: 0.14s;
+  }
+
+  :host([closing][phone]) [part='overlay'] {
+    animation: 0.14s 0.14s lumo-mobile-menu-overlay-exit cubic-bezier(0.55, 0.055, 0.675, 0.19) both;
+  }
 `;
 
 registerStyles('vcf-popup-overlay', [overlay, popupOverlay], { moduleId: 'lumo-vcf-popup-overlay' });
