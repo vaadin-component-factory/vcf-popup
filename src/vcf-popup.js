@@ -171,6 +171,13 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
     this._handleOverlayClick = this._handleOverlayClick.bind(this);
+
+    this.__targetVisibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        this.__onTargetVisibilityChange(entry.isIntersecting);
+      },
+      { threshold: 0.5 }
+    );
   }
 
   ready() {
@@ -274,15 +281,27 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   _attachToTarget(target) {
-    if (!target) {
-      return;
+    if (target) {
+      target.addEventListener('click', this.show);
+
+      // Wait before observing to avoid Chrome issue.
+      requestAnimationFrame(() => {
+        this.__targetVisibilityObserver.observe(target);
+      });
     }
-    target.addEventListener('click', this.show);
   }
 
   _detachFromTarget(target) {
     if (target) {
       target.removeEventListener('click', this.show);
+      this.__targetVisibilityObserver.unobserve(target);
+    }
+  }
+
+  __onTargetVisibilityChange(isVisible) {
+    // Close the overlay when the target is no longer fully visible.
+    if (!isVisible) {
+      this.hide();
     }
   }
 }
