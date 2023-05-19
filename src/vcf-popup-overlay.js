@@ -16,8 +16,8 @@
 
 import '@vaadin/polymer-legacy-adapter/template-renderer.js';
 import '@vaadin/overlay';
-import { getAncestorRootNodes } from '@vaadin/component-base/src/dom-utils';
 import { Overlay } from '@vaadin/overlay/src/vaadin-overlay';
+import { PositionMixin } from '@vaadin/overlay/src/vaadin-overlay-position-mixin';
 import { css, registerStyles } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin';
 
 registerStyles(
@@ -96,7 +96,7 @@ registerStyles(
 
 let memoizedTemplate;
 
-class PopupOverlayElement extends Overlay {
+class PopupOverlayElement extends PositionMixin(Overlay) {
   static get is() {
     return 'vcf-popup-overlay';
   }
@@ -145,14 +145,6 @@ class PopupOverlayElement extends Overlay {
 
   static get properties() {
     return {
-      /**
-       * The element next to which this overlay should be aligned.
-       */
-      positionTarget: {
-        type: Object,
-        value: null
-      },
-
       closeOnScroll: {
         type: Boolean,
         value: false,
@@ -170,8 +162,7 @@ class PopupOverlayElement extends Overlay {
   static get observers() {
     return [
       '_headerFooterRendererChange(headerRenderer, footerRenderer, opened)',
-      '_headerTitleChanged(headerTitle, opened)',
-      '__overlayOpenedChanged(opened, positionTarget)'
+      '_headerTitleChanged(headerTitle, opened)'
     ];
   }
 
@@ -343,42 +334,6 @@ class PopupOverlayElement extends Overlay {
   }
 
   /**
-   * Updates the coordinates of the overlay.
-   * @param {!DialogOverlayBoundsParam} bounds
-   */
-  setBounds(bounds) {
-    const overlay = this.$.overlay;
-    const parsedBounds = { ...bounds };
-
-    if (overlay.style.position !== 'absolute') {
-      overlay.style.position = 'absolute';
-      this.setAttribute('has-bounds-set', '');
-      this.__forceSafariReflow();
-    }
-
-    Object.keys(parsedBounds).forEach((arg) => {
-      if (typeof parsedBounds[arg] === 'number') {
-        parsedBounds[arg] = `${parsedBounds[arg]}px`;
-      }
-    });
-
-    Object.assign(overlay.style, parsedBounds);
-  }
-
-  /**
-   * Retrieves the coordinates of the overlay.
-   */
-  getBounds() {
-    const overlayBounds = this.$.overlay.getBoundingClientRect();
-    const containerBounds = this.getBoundingClientRect();
-    const top = overlayBounds.top - containerBounds.top;
-    const left = overlayBounds.left - containerBounds.left;
-    const width = overlayBounds.width;
-    const height = overlayBounds.height;
-    return { top, left, width, height };
-  }
-
-  /**
    * Safari 13 renders overflowing elements incorrectly.
    * This forces it to recalculate height.
    * @private
@@ -420,36 +375,14 @@ class PopupOverlayElement extends Overlay {
     }
   }
 
-  __addUpdatePositionEventListeners() {
-    this.__positionTargetAncestorRootNodes = getAncestorRootNodes(this.positionTarget);
-    this.__positionTargetAncestorRootNodes.forEach((node) => {
-      node.addEventListener('scroll', this.__onScroll, true);
-    });
-  }
-
-  /** @private */
-  __removeUpdatePositionEventListeners() {
-    if (this.__positionTargetAncestorRootNodes) {
-      this.__positionTargetAncestorRootNodes.forEach((node) => {
-        node.removeEventListener('scroll', this.__onScroll, true);
-      });
-      this.__positionTargetAncestorRootNodes = null;
-    }
-  }
-
-  __overlayOpenedChanged(opened, positionTarget) {
-    this.__removeUpdatePositionEventListeners();
-
-    if (positionTarget && opened) {
-      this.__addUpdatePositionEventListeners();
-    }
-  }
-
-  /** @private */
   __onScroll(e) {
     // If the scroll event occurred inside the overlay, ignore it.
-    if (!this.contains(e.target) && this.closeOnScroll) {
-      this.opened = false;
+    if (!this.contains(e.target)) {
+      if (this.closeOnScroll) {
+        this.opened = false;
+      } else {
+        this._updatePosition();
+      }
     }
   }
 }

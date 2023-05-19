@@ -38,6 +38,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         with-backdrop="[[_phone]]"
         phone$="[[_phone]]"
         position-target="[[target]]"
+        no-vertical-overlap
         close-on-scroll="[[closeOnScroll]]"
         modeless="[[modeless]]"
       >
@@ -260,7 +261,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   show() {
     this.opened = true;
-    this._setPosition();
   }
 
   hide() {
@@ -283,29 +283,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   _detachFromTarget(target) {
     if (target) {
       target.removeEventListener('click', this.show);
-    }
-  }
-
-  _setPosition() {
-    if (this.target) {
-      const targetBoundingRect = this.target.getBoundingClientRect();
-      const overlayRect = this.$.popupOverlay.getBoundingClientRect();
-      const positionLeft = targetBoundingRect.left;
-      const positionTop = targetBoundingRect.top + targetBoundingRect.height + window.pageYOffset;
-
-      if (positionLeft + overlayRect.width > window.innerWidth) {
-        this.$.popupOverlay.style.right = '0px';
-        this.$.popupOverlay.style.left = 'auto';
-      } else {
-        this.$.popupOverlay.style.left = `${Math.max(0, positionLeft)}px`;
-        this.$.popupOverlay.style.right = 'auto';
-      }
-
-      if (positionTop + overlayRect.height > window.innerHeight + window.pageYOffset) {
-        this.$.popupOverlay.style.top = `${positionTop - targetBoundingRect.height - overlayRect.height}px`;
-      } else {
-        this.$.popupOverlay.style.top = `${positionTop}px`;
-      }
     }
   }
 }
