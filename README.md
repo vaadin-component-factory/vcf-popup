@@ -62,6 +62,17 @@ Add `vcf-popup` to the page with attribute `for` that match `id` element to whic
 
 1. Run `npm start` to open the demo.
 
+## Running tests
+
+### Unit tests
+
+Run `npm test` from command line
+
+### Visual tests
+
+1. Run `npm start` to open the demo.
+1. Navigate to `http://localhost:8081/dev/` to open page where you can test features of the Popup
+
 ## Contributing
 
 To contribute to the component, please read [the guideline](https://github.com/vaadin/vaadin-core/blob/master/CONTRIBUTING.md) first.

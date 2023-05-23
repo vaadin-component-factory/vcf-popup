@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!--suppress XmlDuplicatedId -->
+<html lang='en'>
+<head>
+  <meta charset='utf-8' />
+  <meta content='width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes' name='viewport' />
+  <title>vcf-popup UI tests</title>
+  <script src='../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js'></script>
+  <script type='module'>
+    import './autoload-lumo-styles';
+    import '@vaadin/button';
+    import '@vaadin/icon';
+    import '@vaadin/icons';
+    import '../theme/lumo/vcf-popup';
+    import './grid-vcf-popup-integration-demo';
+  </script>
+  <script>
+    window.addEventListener('WebComponentsReady', () => document.querySelector('main').classList.remove('hidden'));
+  </script>
+  <style>
+    body {
+      padding: 100px;
+    }
+  </style>
+</head>
+<body>
+<main class='vertical-section-container centered hidden'>
+  <vaadin-button id='basic' >
+    Basic
+  </vaadin-button>
+  <vcf-popup for='basic'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 10px;
+          max-width: 400px;
+        }
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+          sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+          asperiores repellat. Pellentesque ipsum. Mauris elementum mauris vitae tortor. Pellentesque ipsum. Fusce
+          aliquam vestibulum ipsum. In laoreet, magna id viverra tincidunt, sem odio bibendum justo, vel imperdiet
+          sapien wisi sed libero. Fusce dui leo, imperdiet in, aliquam sit amet, feugiat eu, orci. Nullam lectus justo,
+          vulputate eget mollis sed, tempor sed magna. Integer pellentesque quam vel velit. Nullam sit amet magna in
+          magna gravida vehicula. Aenean placerat. Nunc tincidunt ante vitae massa. Integer rutrum, orci vestibulum
+          ullamcorper ultricies, lacus quam ultricies odio, vitae placerat pede sem sit amet enim. Duis risus. Nullam
+          faucibus mi quis velit. Duis ante orci, molestie vitae vehicula venenatis, tincidunt ac pede. Nunc dapibus
+          tortor vel mi dapibus sollicitudin.</p>
+        <vaadin-button theme='icon'>
+          <vaadin-icon icon='vaadin:edit'></vaadin-icon>
+        </vaadin-button>
+        <vaadin-button theme='icon'>
+          <vaadin-icon icon='vaadin:close'></vaadin-icon>
+        </vaadin-button>
+      </div>
+    </template>
+  </vcf-popup>
+
+  <vaadin-button id='modeless' >
+    Modeless
+  </vaadin-button>
+  <vcf-popup modeless for='modeless'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 10px;
+          max-width: 400px;
+        }
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
+      </div>
+    </template>
+  </vcf-popup>
+
+  <vaadin-button id='header-only' >
+    Header only
+  </vaadin-button>
+  <vcf-popup  for='header-only' header-title='This is header'>
+    <template>
+      <style>
+      #container {
+        padding: 5px 10px;
+        max-width: 400px;
+      }
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
+        <vaadin-button theme='icon'>
+          <vaadin-icon icon='vaadin:edit'></vaadin-icon>
+        </vaadin-button>
+      </div>
+    </template>
+  </vcf-popup>
+
+  <vaadin-button id='close-on-click' >
+    Close on click
+  </vaadin-button>
+  <vcf-popup close-on-click for='close-on-click'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 10px;
+          max-width: 400px;
+        }
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
+        <vaadin-button theme='icon'>
+          <vaadin-icon icon='vaadin:edit'></vaadin-icon>
+        </vaadin-button>
+      </div>
+    </template>
+  </vcf-popup>
+
+  <vaadin-button id='close-on-scroll' >
+    Close on scroll
+  </vaadin-button>
+  <vcf-popup close-on-scroll for='close-on-scroll'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 10px;
+          max-width: 400px;
+        }
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
+      </div>
+    </template>
+  </vcf-popup>
+
+  <vaadin-button id='header-content-only' >
+    Content in header
+  </vaadin-button>
+  <vcf-popup  for='header-content-only'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 10px;
+          max-width: 400px;
+        }
+
+        vcf-popup-overlay::part(header) {
+          border-bottom: 1px black solid;
+        }
+
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
+        <vaadin-button theme='icon'>
+          <vaadin-icon icon='vaadin:edit'></vaadin-icon>
+        </vaadin-button>
+      </div>
+    </template>
+  </vcf-popup>
+
+  <script type="module">
+    const vcfPopup = document.querySelector('vcf-popup[for="header-content-only"]');
+
+    vcfPopup.headerRenderer = (root) => {
+      if (root.firstChild) {
+        return;
+      }
+      const button = document.createElement('vaadin-button');
+      button.innerHTML = '<vaadin-icon icon="lumo:cross" aria-label="close popup"></vaadin-icon>';
+      button.theme = 'tertiary-inline icon';
+      button.addEventListener('click', () => {
+        vcfPopup.opened = false;
+      });
+
+      const text = document.createElement('span');
+      text.textContent = 'Header content';
+
+      root.append(text, button);
+    };
+  </script>
+
+  <vaadin-button id='header-title-and-content' >
+    Title and content in header
+  </vaadin-button>
+  <vcf-popup  for='header-title-and-content' header-title='This is header'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 10px;
+          min-width: 400px;
+        }
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
+        <vaadin-button theme='icon'>
+          <vaadin-icon icon='vaadin:edit'></vaadin-icon>
+        </vaadin-button>
+      </div>
+    </template>
+  </vcf-popup>
+
+  <script type="module">
+    const vcfPopup = document.querySelector('vcf-popup[for="header-title-and-content"]');
+
+    vcfPopup.headerRenderer = (root) => {
+      if (root.firstChild) {
+        return;
+      }
+      const button = document.createElement('vaadin-button');
+      button.innerHTML = '<vaadin-icon icon="lumo:cross" aria-label="close popup"></vaadin-icon>';
+      button.theme = 'tertiary-inline icon';
+      button.addEventListener('click', () => {
+        vcfPopup.opened = false;
+      });
+
+      const text = document.createElement('span');
+      text.textContent = 'Header content';
+
+      root.append(text, button);
+    };
+  </script>
+
+  <vaadin-button id='footer-content'>
+    Content in footer
+  </vaadin-button>
+  <vcf-popup for='footer-content'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 10px;
+          min-width: 400px;
+        }
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
+        <vaadin-button theme='icon'>
+          <vaadin-icon icon='vaadin:edit'></vaadin-icon>
+        </vaadin-button>
+      </div>
+    </template>
+  </vcf-popup>
+
+  <script type="module">
+    const vcfPopup = document.querySelector('vcf-popup[for="footer-content"]');
+
+    vcfPopup.footerRenderer = (root) => {
+      if (root.firstChild) {
+        return;
+      }
+      const button = document.createElement('vaadin-button');
+      button.textContent = 'Action';
+      button.theme = 'primary';
+
+      const button2 = document.createElement('vaadin-button');
+      button2.textContent = 'Action';
+
+      const text = document.createElement('span');
+      text.textContent = 'Footer content';
+
+      root.append(text, button2, button);
+    };
+  </script>
+
+
+  <vaadin-button id='popup-with-long-content'>
+    Popup with long content
+  </vaadin-button>
+  <vcf-popup for='popup-with-long-content' header-title='Popup with long content'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 15px;
+        }
+
+        vcf-popup-overlay::part(content) {
+          overflow: auto;
+          max-height: 25rem;
+          max-width: 30rem;
+        }
+
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+          sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+          asperiores repellat. Pellentesque ipsum. Mauris elementum mauris vitae tortor. Pellentesque ipsum. Fusce
+          aliquam vestibulum ipsum. In laoreet, magna id viverra tincidunt, sem odio bibendum justo, vel imperdiet
+          sapien wisi sed libero. Fusce dui leo, imperdiet in, aliquam sit amet, feugiat eu, orci. Nullam lectus justo,
+          vulputate eget mollis sed, tempor sed magna. Integer pellentesque quam vel velit. Nullam sit amet magna in
+          magna gravida vehicula. Aenean placerat. Nunc tincidunt ante vitae massa. Integer rutrum, orci vestibulum
+          ullamcorper ultricies, lacus quam ultricies odio, vitae placerat pede sem sit amet enim. Duis risus. Nullam
+          faucibus mi quis velit. Duis ante orci, molestie vitae vehicula venenatis, tincidunt ac pede. Nunc dapibus
+          tortor vel mi dapibus sollicitudin.</p>
+      </div>
+    </template>
+  </vcf-popup>
+
+  <script type="module">
+    const vcfPopup = document.querySelector('vcf-popup[for="popup-with-long-content"]');
+
+    vcfPopup.footerRenderer = (root) => {
+      if (root.firstChild) {
+        return;
+      }
+      const button = document.createElement('vaadin-button');
+      button.textContent = 'Previous';
+
+      root.append(button);
+    };
+  </script>
+
+
+  <vaadin-button id='popup-with-long-content2'>
+    Popup with long content, no header or footer
+  </vaadin-button>
+  <vcf-popup for='popup-with-long-content2'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 15px;
+        }
+
+        vcf-popup-overlay::part(content) {
+          overflow: auto;
+          max-height: 25rem;
+          max-width: 30rem;
+        }
+
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+          sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+          asperiores repellat. Pellentesque ipsum. Mauris elementum mauris vitae tortor. Pellentesque ipsum. Fusce
+          aliquam vestibulum ipsum. In laoreet, magna id viverra tincidunt, sem odio bibendum justo, vel imperdiet
+          sapien wisi sed libero. Fusce dui leo, imperdiet in, aliquam sit amet, feugiat eu, orci. Nullam lectus justo,
+          vulputate eget mollis sed, tempor sed magna. Integer pellentesque quam vel velit. Nullam sit amet magna in
+          magna gravida vehicula. Aenean placerat. Nunc tincidunt ante vitae massa. Integer rutrum, orci vestibulum
+          ullamcorper ultricies, lacus quam ultricies odio, vitae placerat pede sem sit amet enim. Duis risus. Nullam
+          faucibus mi quis velit. Duis ante orci, molestie vitae vehicula venenatis, tincidunt ac pede. Nunc dapibus
+          tortor vel mi dapibus sollicitudin.</p>
+      </div>
+    </template>
+  </vcf-popup>
+
+  <grid-vcf-popup-integration-demo></grid-vcf-popup-integration-demo>
+
+</main>
+</body>
+</html>

@@ -14,21 +14,12 @@
  * the License.
  */
 
-import { html, PolymerElement } from '@polymer/polymer/polymer-element';
-import { ThemableMixin } from '@vaadin/vaadin-themable-mixin';
-import { ElementMixin } from '@vaadin/component-base/src/element-mixin';
-import { Overlay } from '@vaadin/overlay/src/vaadin-overlay.js';
 import '@vaadin/polymer-legacy-adapter/template-renderer.js';
-import '@vaadin/overlay';
 import '@polymer/iron-media-query';
-
-class PopupOverlayElement extends Overlay {
-  static get is() {
-    return 'vcf-popup-overlay';
-  }
-}
-
-customElements.define(PopupOverlayElement.is, PopupOverlayElement);
+import './vcf-popup-overlay';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element';
+import { ElementMixin } from '@vaadin/component-base/src/element-mixin';
+import { ThemableMixin } from '@vaadin/vaadin-themable-mixin';
 
 class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   static get template() {
@@ -41,14 +32,19 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
       <vcf-popup-overlay
         id="popupOverlay"
+        header-title="[[headerTitle]]"
         opened="{{opened}}"
         theme$="[[theme]]"
         with-backdrop="[[_phone]]"
         phone$="[[_phone]]"
+        position-target="[[target]]"
+        no-vertical-overlap
+        close-on-scroll="[[closeOnScroll]]"
+        modeless="[[modeless]]"
       >
       </vcf-popup-overlay>
 
-      <iron-media-query query="[[_phoneMediaQuery]]" query-matches="{{_phone}}"> </iron-media-query>
+      <iron-media-query query="[[_phoneMediaQuery]]" query-matches="{{_phone}}"></iron-media-query>
     `;
   }
 
@@ -57,8 +53,9 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   static get version() {
-    return '1.2.6';
+    return '23.3.0';
   }
+
   /**
    * Object describing property-related metadata used by Polymer features
    */
@@ -67,11 +64,28 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       opened: {
         type: Boolean,
         value: false,
-        reflectToAttribute: true
+        reflectToAttribute: true,
+        observer: '_openedChanged'
       },
 
+      /**
+       * The id of the element used as a tooltip trigger.
+       * The element should be in the DOM by the time when
+       * the attribute is set, otherwise a warning is shown.
+       */
       for: {
-        type: String
+        type: String,
+        observer: '__forChanged'
+      },
+
+      /**
+       * Reference to the element used as a tooltip trigger.
+       * The target must be placed in the same shadow scope.
+       * Defaults to an element referenced with `for`.
+       */
+      target: {
+        type: Object,
+        observer: '__targetChanged'
       },
 
       closeOnClick: {
@@ -80,8 +94,63 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         reflectToAttribute: true
       },
 
-      _targetElement: {
-        type: Object
+      /**
+       * Will close the popup if content outside of the popup is scrolled.
+       *
+       * Note: The popup has to be 'modeless' in order closeOnScroll to have any effect.
+       */
+      closeOnScroll: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+
+      /**
+       * String used for rendering a popup title.
+       *
+       * If both `headerTitle` and `headerRenderer` are defined, the title
+       * and the elements created by the renderer will be placed next to
+       * each other, with the title coming first.
+       *
+       * When `headerTitle` is set, the attribute `has-title` is added to the overlay element.
+       * @attr {string} header-title
+       */
+      headerTitle: String,
+
+      /**
+       * Custom function for rendering the popup header.
+       * Receives two arguments:
+       *
+       * - `root` The root container DOM element. Append your content to it.
+       * - `popup` The reference to the `<vcf-popup>` element.
+       *
+       * If both `headerTitle` and `headerRenderer` are defined, the title
+       * and the elements created by the renderer will be placed next to
+       * each other, with the title coming first.
+       *
+       * When `headerRenderer` is set, the attribute `has-header` is added to the overlay element.
+       */
+      headerRenderer: Function,
+
+      /**
+       * Custom function for rendering the popup footer.
+       * Receives two arguments:
+       *
+       * - `root` The root container DOM element. Append your content to it.
+       * - `popup` The reference to the `<vcf-popup>` element.
+       *
+       * When `footerRenderer` is set, the attribute `has-footer` is added to the overlay element.
+       */
+      footerRenderer: Function,
+
+      /**
+       * When true the overlay won't disable the main content, showing
+       * it doesn’t change the functionality of the user interface.
+       */
+      modeless: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
       },
 
       _phone: Boolean,
@@ -92,107 +161,153 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     };
   }
 
-  /**
-   * @protected
-   */
-  static _finalizeClass() {
-    super._finalizeClass();
-  }
-
   static get observers() {
-    return ['_attachToTarget(for)'];
+    return ['_rendererChanged(headerRenderer, footerRenderer)'];
   }
 
   constructor() {
     super();
-    this._boundShow = this.show.bind(this);
-    this._boundHide = this.hide.bind(this);
+
+    this.show = this.show.bind(this);
+    this.hide = this.hide.bind(this);
+    this._handleOverlayClick = this._handleOverlayClick.bind(this);
+
+    this.__targetVisibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        this.__onTargetVisibilityChange(entry.isIntersecting);
+      },
+      { threshold: 0.5 }
+    );
   }
 
   ready() {
     super.ready();
     // this.$.popupOverlay.template = this.querySelector('template');
     const content = this.querySelector('template').innerHTML;
-    this.$.popupOverlay.renderer = root => {
+    this.$.popupOverlay.renderer = (root) => {
       root.innerHTML = content;
     };
-    this.$.popupOverlay.addEventListener('vaadin-overlay-open', () => this._popupOpenChanged(true));
-    this.$.popupOverlay.addEventListener('vaadin-overlay-close', () => this._popupOpenChanged(false));
-    if (this.closeOnClick) {
-      this.$.popupOverlay.addEventListener('click', this._boundHide);
+    this.$.popupOverlay.template = this.querySelector('template');
+    this.$.popupOverlay.addEventListener('click', this._handleOverlayClick);
+  }
+
+  /**
+   * Requests an update for the content of the popup.
+   * While performing the update, it invokes the renderer passed in the `renderer` property,
+   * as well as `headerRender` and `footerRenderer` properties, if these are defined.
+   *
+   * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
+   */
+  requestContentUpdate() {
+    if (this.$) {
+      this.$.popupOverlay.requestContentUpdate();
     }
   }
 
+  /** @private */
+  _rendererChanged(headerRenderer, footerRenderer) {
+    this.$.popupOverlay.setProperties({ owner: this, headerRenderer, footerRenderer });
+  }
+
   connectedCallback() {
-    if (!this._targetElement) {
-      this._targetElement = this.parentNode.querySelector(`#${this.for}`);
-    }
-    this._attachToTarget();
     super.connectedCallback();
+    this._attachToTarget(this.target);
+
+    // Restore opened state if overlay was opened when disconnecting
+    if (this.__restoreOpened) {
+      this.opened = true;
+    }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._detachFromTarget();
-    if (this.closeOnClick) {
-      this.$.popupOverlay.removeEventListener('click', this._boundHide);
+    this._detachFromTarget(this.target);
+
+    // Close overlay to clear document listener; also memorize opened state
+    this.__restoreOpened = this.opened;
+    this.opened = false;
+  }
+
+  _openedChanged(opened, oldValue) {
+    if (opened) {
+      setTimeout(() => {
+        document.addEventListener('click', this.hide);
+      });
+    } else {
+      document.removeEventListener('click', this.hide);
+    }
+
+    // avoid dispatching event when setting initial value 'false'
+    if (oldValue !== undefined) {
+      this.dispatchEvent(
+        new CustomEvent('popup-open-changed', {
+          detail: {
+            opened: opened
+          }
+        })
+      );
+    }
+  }
+
+  __forChanged(forId) {
+    if (forId) {
+      const target = this.getRootNode().getElementById(forId);
+
+      if (target) {
+        this.target = target;
+      } else {
+        console.warn(`No element with id="${forId}" found to show popup.`);
+      }
+    }
+  }
+
+  __targetChanged(target, oldTarget) {
+    if (oldTarget) {
+      this._detachFromTarget(oldTarget);
+    }
+
+    if (target) {
+      this._attachToTarget(target);
     }
   }
 
   show() {
     this.opened = true;
-    this._setPosition();
   }
 
   hide() {
     this.opened = false;
   }
 
-  _attachToTarget() {
-    if (!this._targetElement) {
-      return;
-    }
-    this._targetElement.addEventListener('click', this._boundShow);
-  }
-
-  _detachFromTarget() {
-    this._targetElement.removeEventListener('click', this._boundShow);
-  }
-
-  _setPosition() {
-    const targetBoundingRect = this._targetElement.getBoundingClientRect();
-    const overlayRect = this.$.popupOverlay.getBoundingClientRect();
-    const positionLeft = targetBoundingRect.left;
-    const positionTop = targetBoundingRect.top + targetBoundingRect.height + window.pageYOffset;
-
-    if (positionLeft + overlayRect.width > window.innerWidth) {
-      this.$.popupOverlay.style.right = '0px';
-      this.$.popupOverlay.style.left = 'auto';
-    } else {
-      this.$.popupOverlay.style.left = `${Math.max(0, positionLeft)}px`;
-      this.$.popupOverlay.style.right = 'auto';
-    }
-
-    if (positionTop + overlayRect.height > window.innerHeight + window.pageYOffset) {
-      this.$.popupOverlay.style.top = `${positionTop - targetBoundingRect.height - overlayRect.height}px`;
-    } else {
-      this.$.popupOverlay.style.top = `${positionTop}px`;
+  _handleOverlayClick(event) {
+    if (!this.closeOnClick && !this._phone) {
+      event.stopPropagation();
     }
   }
 
-  _popupOpenChanged(isOpened) {
-    if (isOpened) {
-      window.addEventListener('scroll', this._boundSetPosition, true);
-    } else {
-      window.removeEventListener('scroll', this._boundSetPosition, true);
+  _attachToTarget(target) {
+    if (target) {
+      target.addEventListener('click', this.show);
+
+      // Wait before observing to avoid Chrome issue.
+      requestAnimationFrame(() => {
+        this.__targetVisibilityObserver.observe(target);
+      });
     }
-    this.dispatchEvent(
-      new CustomEvent('popup-open-changed', {
-        detail: {
-          opened: isOpened
-        }
-      })
-    );
+  }
+
+  _detachFromTarget(target) {
+    if (target) {
+      target.removeEventListener('click', this.show);
+      this.__targetVisibilityObserver.unobserve(target);
+    }
+  }
+
+  __onTargetVisibilityChange(isVisible) {
+    // Close the overlay when the target is no longer fully visible.
+    if (!isVisible) {
+      this.hide();
+    }
   }
 }
 

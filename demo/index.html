@@ -54,6 +54,79 @@
           </vcf-popup>
         </template>
       </demo-snippet>
+      <h3>Header and Footer</h3>
+      <demo-snippet>
+        <template>
+          <vaadin-button theme="icon tertiary" id="header-footer">
+            <vaadin-icon icon="vaadin:ellipsis-dots-h"></vaadin-icon>
+          </vaadin-button>
+          <vcf-popup  for='header-footer' header-title='This is header'>
+            <template>
+              <style>
+                #container {
+                  padding: 5px 10px;
+                }
+                vcf-popup-overlay::part(content) {
+                  overflow: auto;
+                  max-height: 25rem;
+                  max-width: 28rem;
+                }
+              </style>
+              <div id='container'>
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+                  sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+                  asperiores repellat. Pellentesque ipsum. Mauris elementum mauris vitae tortor. Pellentesque ipsum. Fusce
+                  aliquam vestibulum ipsum. </p>
+                <vaadin-button theme='icon'>
+                  <vaadin-icon icon='vaadin:edit'></vaadin-icon>
+                </vaadin-button>
+                <p>mollis sed, tempor sed magna. Integer pellentesque quam vel velit. Nullam sit amet magna in
+                  magna gravida vehicula. Aenean placerat. Nunc tincidunt ante vitae massa. Integer rutrum, orci vestibulum
+                  ullamcorper ultricies, lacus quam ultricies odio, vitae placerat pede sem sit amet enim. Duis risus. Nullam
+                  faucibus mi quis velit. </p>
+              </div>
+            </template>
+          </vcf-popup>
+
+          <script type="module">
+            const vcfPopup = document.querySelector('vcf-popup[for="header-footer"]');
+
+            vcfPopup.headerRenderer = (root) => {
+              if (root.firstChild) {
+                return;
+              }
+              const button = document.createElement('vaadin-button');
+              button.innerHTML = '<vaadin-icon icon="lumo:cross" aria-label="close popup"></vaadin-icon>';
+              button.theme = 'tertiary-inline icon';
+              button.addEventListener('click', () => {
+                vcfPopup.opened = false;
+              });
+
+              const text = document.createElement('span');
+              text.textContent = 'Header content';
+
+              root.append(text, button);
+            };
+
+            vcfPopup.footerRenderer = (root) => {
+              if (root.firstChild) {
+                return;
+              }
+              const button = document.createElement('vaadin-button');
+              button.textContent = 'Action';
+              button.theme = 'primary';
+
+              const button2 = document.createElement('vaadin-button');
+              button2.textContent = 'Action';
+
+              const text = document.createElement('span');
+              text.textContent = 'Footer content';
+
+              root.append(text, button2, button);
+            };
+          </script>
+        </template>
+      </demo-snippet>
     </main>
   </body>
 </html>
