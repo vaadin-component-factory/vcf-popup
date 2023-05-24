@@ -96,8 +96,8 @@
                 return;
               }
               const button = document.createElement('vaadin-button');
-              button.innerHTML = '<vaadin-icon icon="lumo:cross" aria-label="close popup"></vaadin-icon>';
-              button.theme = 'tertiary-inline icon';
+              button.innerHTML = '<vaadin-icon icon="vaadin:close-small" aria-label="close popup"></vaadin-icon>';
+              button.setAttribute('theme','tertiary icon');
               button.addEventListener('click', () => {
                 vcfPopup.opened = false;
               });
@@ -114,7 +114,7 @@
               }
               const button = document.createElement('vaadin-button');
               button.textContent = 'Action';
-              button.theme = 'primary';
+              button.setAttribute('theme','primary');
 
               const button2 = document.createElement('vaadin-button');
               button2.textContent = 'Action';
