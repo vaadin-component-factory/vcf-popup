@@ -233,8 +233,10 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       setTimeout(() => {
         document.addEventListener('click', this.hide);
       });
+      this.__setPopupOpenedAttributeOnTarget();
     } else {
       document.removeEventListener('click', this.hide);
+      this.__removePopupOpenedAttributeOnTarget();
     }
 
     // avoid dispatching event when setting initial value 'false'
@@ -249,6 +251,17 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     }
   }
 
+  __setPopupOpenedAttributeOnTarget() {
+    if (this.target) {
+      this.target.setAttribute('popup-opened', '');
+    }
+  }
+
+  __removePopupOpenedAttributeOnTarget() {
+    if (this.target) {
+      this.target.removeAttribute('popup-opened');
+    }
+  }
   __forChanged(forId) {
     if (forId) {
       const target = this.getRootNode().getElementById(forId);
@@ -288,6 +301,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   _attachToTarget(target) {
     if (target) {
       target.addEventListener('click', this.show);
+      target.setAttribute('has-popup', '');
 
       // Wait before observing to avoid Chrome issue.
       requestAnimationFrame(() => {
@@ -299,6 +313,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   _detachFromTarget(target) {
     if (target) {
       target.removeEventListener('click', this.show);
+      target.removeAttribute('has-popup');
       this.__targetVisibilityObserver.unobserve(target);
     }
   }
