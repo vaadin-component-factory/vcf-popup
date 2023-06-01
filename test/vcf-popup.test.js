@@ -235,4 +235,68 @@ describe('vcf-popup', () => {
       expect(popup.opened).to.be.false;
     });
   });
+
+  describe('has-popup', () => {
+    let target, anotherTarget, popup;
+
+    beforeEach(() => {
+      const pageSetup = fixtureSync(`<div>
+            <div id='target-element'></div>
+            <vcf-popup for='target-element'></vcf-popup>
+            <div id='another-target'></div>
+        </div`);
+      target = pageSetup.querySelector('#target-element');
+      anotherTarget = pageSetup.querySelector('#another-target');
+      popup = pageSetup.querySelector('vcf-popup[for="target-element"]');
+    });
+
+    it('should have a has-popup when attached', async () => {
+      expect(target.hasAttribute('has-popup')).to.be.true;
+    });
+
+    it('should remove has-popup when detached', async () => {
+      popup.for = 'another-target';
+      expect(target.hasAttribute('has-popup')).to.be.false;
+    });
+
+    it('should add has-popup when re-attached', async () => {
+      popup.for = 'another-target';
+      popup.for = 'target-element';
+      expect(target.hasAttribute('has-popup')).to.be.true;
+    });
+  });
+
+  describe('popup-opened', () => {
+    let target, anotherTarget, popup;
+
+    beforeEach(() => {
+      const pageSetup = fixtureSync(`<div>
+            <div id='target-element'></div>
+            <vcf-popup for='target-element'></vcf-popup>
+            <div id='another-target'></div>
+        </div`);
+      target = pageSetup.querySelector('#target-element');
+      anotherTarget = pageSetup.querySelector('#another-target');
+      popup = pageSetup.querySelector('vcf-popup[for="target-element"]');
+    });
+
+    it('should not have popup-opened initially', async () => {
+      expect(popup.opened).to.be.false;
+      expect(target.hasAttribute('popup-opened')).to.be.false;
+    });
+
+    it('should have popup-opened when popup is opened', async () => {
+      popup.opened = true;
+      await nextRender();
+      expect(target.hasAttribute('popup-opened')).to.be.true;
+    });
+
+    it('should not have popup-opened when popup is closed', async () => {
+      popup.opened = true;
+      await nextRender();
+      popup.opened = false;
+      await nextRender();
+      expect(target.hasAttribute('popup-opened')).to.be.false;
+    });
+  });
 });
