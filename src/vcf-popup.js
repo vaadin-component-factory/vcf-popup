@@ -182,13 +182,18 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   ready() {
     super.ready();
-    // this.$.popupOverlay.template = this.querySelector('template');
-    const content = this.querySelector('template').innerHTML;
-    this.$.popupOverlay.renderer = (root) => {
-      root.innerHTML = content;
-    };
-    this.$.popupOverlay.template = this.querySelector('template');
+    this.__setOverlayContentFromTemplate();
     this.$.popupOverlay.addEventListener('click', this._handleOverlayClick);
+  }
+
+  __setOverlayContentFromTemplate() {
+    let overlayContentTemplate = this.querySelector('template');
+    if (overlayContentTemplate) {
+      const content = overlayContentTemplate.innerHTML;
+      this.$.popupOverlay.renderer = (root) => {
+        root.innerHTML = content;
+      };
+    }
   }
 
   /**
