@@ -41,6 +41,8 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         no-vertical-overlap
         close-on-scroll="[[closeOnScroll]]"
         modeless="[[modeless]]"
+        focus-trap
+        restore-focus-on-close
       >
       </vcf-popup-overlay>
 

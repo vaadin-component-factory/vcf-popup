@@ -3,6 +3,10 @@ import { overlay } from '@vaadin/vaadin-lumo-styles/mixins/overlay.js';
 import { css, registerStyles } from '@vaadin/vaadin-themable-mixin/vaadin-themable-mixin.js';
 
 const popupOverlay = css`
+  [part='overlay'] {
+    outline: none;
+  }
+
   [part='content'] {
     padding: 0;
   }

@@ -259,7 +259,63 @@
     };
   </script>
 
+  <vaadin-button id='header-footer-content'>
+    Content in header and footer
+  </vaadin-button>
+  <vcf-popup modeless header-title='My popup title' for='header-footer-content'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 15px;
+          max-width: 400px;
+          min-width: 300px;
+        }
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
+      </div>
+    </template>
+  </vcf-popup>
 
+  <script type="module">
+    const vcfPopup = document.querySelector('vcf-popup[for="header-footer-content"]');
+
+    vcfPopup.headerRenderer = (root) => {
+      if (root.firstChild) {
+        return;
+      }
+      const button = document.createElement('vaadin-button');
+      button.innerHTML = '<vaadin-icon icon="lumo:cross" aria-label="close popup"></vaadin-icon>';
+      button.theme = 'tertiary-inline icon';
+      button.addEventListener('click', () => {
+        vcfPopup.opened = false;
+      });
+
+      root.append( button);
+    };
+
+    vcfPopup.footerRenderer = (root) => {
+      if (root.firstChild) {
+        return;
+      }
+      const saveButton = document.createElement('vaadin-button');
+      saveButton.textContent = 'Save';
+      saveButton.theme = 'primary';
+      saveButton.addEventListener('click', event => {
+        console.log("Save clicked");
+        vcfPopup.opened = false;
+      })
+
+      const cancelButton = document.createElement('vaadin-button');
+      cancelButton.textContent = 'Cancel';
+      cancelButton.addEventListener('click', event => {
+        console.log("Cancel clicked");
+        vcfPopup.opened = false;
+      })
+
+      root.append(cancelButton, saveButton);
+    };
+  </script>
   <vaadin-button id='popup-with-long-content'>
     Popup with long content
   </vaadin-button>
