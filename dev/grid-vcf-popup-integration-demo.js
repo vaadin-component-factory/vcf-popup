@@ -20,6 +20,7 @@ export class GridVcfPopupIntegrationDemo extends LitElement {
           <vcf-popup
             modeless
             close-on-scroll
+            position="end"
             for="popupBtn${person.id}"
             header-title="${person.firstName} ${person.lastName} "
           >
@@ -79,7 +80,7 @@ export class GridVcfPopupIntegrationDemo extends LitElement {
       <vaadin-grid .items="${this._items}">
         <vaadin-grid-column header="Id" ${columnBodyRenderer(this.idRenderer, [])}></vaadin-grid-column>
         <vaadin-grid-column header="First Name" path="firstName"></vaadin-grid-column>
-        <vaadin-grid-column heade="Last Name" path="lastName"></vaadin-grid-column>
+        <vaadin-grid-column header="Last Name" path="lastName"></vaadin-grid-column>
       </vaadin-grid>
     `;
   }

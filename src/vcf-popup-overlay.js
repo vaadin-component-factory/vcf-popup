@@ -159,7 +159,20 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
 
       headerRenderer: Function,
 
-      footerRenderer: Function
+      footerRenderer: Function,
+
+      /**
+       * Position of the popup overlay with respect to its target.
+       * Supported values:
+       * `bottom` - under the target element
+       * `end` - in LTR environment to the right of the target element, in RTL environment to the left
+       */
+      preferredPosition: {
+        type: String,
+        value: 'bottom',
+        reflectToAttribute: true,
+        observer: '__preferredPositionChanged'
+      }
     };
   }
 
@@ -204,6 +217,16 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
     this.$.content.addEventListener('scroll', () => {
       this.__updateOverflow();
     });
+  }
+
+  __preferredPositionChanged(position) {
+    if (position === 'bottom') {
+      this.noHorizontalOverlap = false;
+      this.noVerticalOverlap = true;
+    } else if (position === 'end') {
+      this.noHorizontalOverlap = true;
+      this.noVerticalOverlap = false;
+    }
   }
 
   /** @private */
@@ -386,6 +409,36 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
         this.opened = false;
       } else {
         this._updatePosition();
+      }
+    }
+  }
+
+  /**
+   * @protected
+   * @override
+   */
+  _updatePosition() {
+    super._updatePosition();
+
+    if (!this.positionTarget) {
+      return;
+    }
+
+    if (this.noHorizontalOverlap) {
+      const targetRect = this.positionTarget.getBoundingClientRect();
+      // Using previous size to fix a case where window resize may cause the overlay to be squeezed
+      // smaller than its current space before the fit-calculations. Taken from PositionMixin#__shouldAlignStartVertically().
+      const overlayHeight =
+        this.requiredVerticalSpace || Math.max(this.__oldContentHeight || 0, this.$.overlay.offsetHeight);
+      const offset = targetRect.height / 2 - overlayHeight / 2;
+
+      if (this.style.top) {
+        const currentValue = parseFloat(this.style.top);
+        this.style.top = Math.max(currentValue + offset, 15) + 'px';
+      }
+      if (this.style.bottom) {
+        const currentValue = parseFloat(this.style.bottom);
+        this.style.bottom = Math.max(currentValue + offset, 15) + 'px';
       }
     }
   }

@@ -38,7 +38,6 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         with-backdrop="[[_phone]]"
         phone$="[[_phone]]"
         position-target="[[target]]"
-        no-vertical-overlap
         close-on-scroll="[[closeOnScroll]]"
         modeless="[[modeless]]"
         focus-trap
@@ -155,6 +154,18 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         reflectToAttribute: true
       },
 
+      /**
+       * Position of the popup with respect to its target.
+       * Supported values:
+       * `bottom` - under the target element
+       * `end` - in LTR environment to the right of the target element, in RTL environment to the left
+       */
+      position: {
+        type: String,
+        value: 'bottom',
+        observer: '__positionChanged'
+      },
+
       _phone: Boolean,
 
       _phoneMediaQuery: {
@@ -259,6 +270,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       this.target.removeAttribute('popup-opened');
     }
   }
+
   __forChanged(forId) {
     if (forId) {
       const target = this.getRootNode().getElementById(forId);
@@ -269,6 +281,10 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         console.warn(`No element with id="${forId}" found to show popup.`);
       }
     }
+  }
+
+  __positionChanged(position) {
+    this.$.popupOverlay.preferredPosition = position;
   }
 
   __targetChanged(target, oldTarget) {
