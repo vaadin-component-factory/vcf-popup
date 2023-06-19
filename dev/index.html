@@ -13,6 +13,7 @@
     import '@vaadin/icons';
     import '../theme/lumo/vcf-popup';
     import './grid-vcf-popup-integration-demo';
+    import '@vaadin/radio-group';
   </script>
   <script>
     window.addEventListener('WebComponentsReady', () => document.querySelector('main').classList.remove('hidden'));
@@ -21,14 +22,34 @@
     body {
       padding: 100px;
     }
+
+    .main-section {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+    }
   </style>
 </head>
 <body>
-<main class='vertical-section-container centered hidden'>
-  <vaadin-button id='basic' >
+<main class='main-section'>
+  <h4>Settings</h4>
+  <vaadin-radio-group id='position-change' label="Popup position" theme="vertical">
+    <vaadin-radio-button class='position-change-option' value="bottom" label="To the bottom of the target element" checked ></vaadin-radio-button>
+    <vaadin-radio-button class='position-change-option' value="end" label="To the right of the target element"></vaadin-radio-button>
+  </vaadin-radio-group>
+  <script type="module">
+    document.querySelector('#position-change').addEventListener('value-changed', (event) => {
+      document.querySelectorAll('vcf-popup').forEach((popup) => {
+        popup.position = event.detail.value;
+        window.popupPositioning = event.detail.value;
+      })
+    });
+  </script>
+  <hr>
+  <vaadin-button id='basic'  style="align-self: center">
     Basic
   </vaadin-button>
-  <vcf-popup for='basic'>
+  <vcf-popup for='basic' >
     <template>
       <style>
         #container {
@@ -394,8 +415,70 @@
       </div>
     </template>
   </vcf-popup>
+<vaadin-button id='target-aligned-right' style="align-self: end">
+  Target aligned right
+</vaadin-button>
+  <vcf-popup for='target-aligned-right'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 15px;
+        }
 
-  <grid-vcf-popup-integration-demo></grid-vcf-popup-integration-demo>
+        vcf-popup-overlay::part(content) {
+          overflow: auto;
+          max-height: 25rem;
+          max-width: 30rem;
+        }
+
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+          sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+          asperiores repellat. Pellentesque ipsum. Mauris elementum mauris vitae tortor. Pellentesque ipsum. Fusce
+          aliquam vestibulum ipsum. In laoreet, magna id viverra tincidunt, sem odio bibendum justo, vel imperdiet
+          sapien wisi sed libero. Fusce dui leo, imperdiet in, aliquam sit amet, feugiat eu, orci. Nullam lectus justo,
+          vulputate eget mollis sed, tempor sed magna. Integer pellentesque quam vel velit. Nullam sit amet magna in
+          magna gravida vehicula. Aenean placerat. Nunc tincidunt ante vitae massa. Integer rutrum, orci vestibulum
+          ullamcorper ultricies, lacus quam ultricies odio, vitae placerat pede sem sit amet enim. Duis risus. Nullam
+          faucibus mi quis velit. Duis ante orci, molestie vitae vehicula venenatis, tincidunt ac pede. Nunc dapibus
+          tortor vel mi dapibus sollicitudin.</p>
+      </div>
+    </template>
+  </vcf-popup>
+  <vaadin-button id='button-to-open-popup-without-target'>
+    Popup not attached to any target
+  </vaadin-button>
+  <vcf-popup id='popup-without-target'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 15px;
+        }
+
+        vcf-popup-overlay::part(content) {
+          overflow: auto;
+          max-height: 25rem;
+          max-width: 30rem;
+        }
+
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+          sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+          asperiores repellat.</p>
+      </div>
+    </template>
+  </vcf-popup>
+  <script type="module">
+    const button = document.querySelector('#button-to-open-popup-without-target');
+    button.addEventListener('click', () => {
+      const popup = document.querySelector('#popup-without-target');
+      popup.show();
+    })
+  </script>
+
+  <grid-vcf-popup-integration-demo style="align-self: stretch"></grid-vcf-popup-integration-demo>
 
 </main>
 </body>
