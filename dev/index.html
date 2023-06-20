@@ -14,6 +14,7 @@
     import '../theme/lumo/vcf-popup';
     import './grid-vcf-popup-integration-demo';
     import '@vaadin/radio-group';
+    import '@vaadin/checkbox-group';
     import '@vaadin/text-area';
     import '@vaadin/text-field';
     import '@vaadin/time-picker';
@@ -36,23 +37,40 @@
 <body>
 <main class='main-section'>
   <h4>Settings</h4>
-  <vaadin-radio-group id='position-change' label="Popup position" theme="vertical">
-    <vaadin-radio-button class='position-change-option' value="bottom" label="To the bottom of the target element" checked ></vaadin-radio-button>
-    <vaadin-radio-button class='position-change-option' value="end" label="To the right of the target element"></vaadin-radio-button>
+
+  <vaadin-checkbox-group id='options' label='Options' theme='vertical'>
+    <vaadin-checkbox label='Show pointer arrow towards the target element' value='pointer-arrow-theme'></vaadin-checkbox>
+  </vaadin-checkbox-group>
+  <vaadin-radio-group id='position-change' label='Popup position' theme='vertical'>
+    <vaadin-radio-button checked class='position-change-option' label='To the bottom of the target element'
+                         value='bottom'></vaadin-radio-button>
+    <vaadin-radio-button class='position-change-option' label='To the right of the target element'
+                         value='end'></vaadin-radio-button>
   </vaadin-radio-group>
-  <script type="module">
+
+  <script type='module'>
     document.querySelector('#position-change').addEventListener('value-changed', (event) => {
       document.querySelectorAll('vcf-popup').forEach((popup) => {
         popup.position = event.detail.value;
-        window.popupPositioning = event.detail.value;
-      })
+      });
     });
+
+    document.querySelector('#options').addEventListener('value-changed', (event) => {
+      document.querySelectorAll('vcf-popup').forEach((popup) => {
+        if (event.detail.value.includes('pointer-arrow-theme')) {
+          popup.theme = 'pointer-arrow debil';
+        } else {
+          popup.theme = null;
+        }
+      });
+    });
+
   </script>
   <hr>
-  <vaadin-button id='basic'  style="align-self: center">
+  <vaadin-button id='basic' style='align-self: center'>
     Basic
   </vaadin-button>
-  <vcf-popup for='basic' >
+  <vcf-popup for='basic'>
     <template>
       <style>
         #container {
@@ -81,10 +99,10 @@
     </template>
   </vcf-popup>
 
-  <vaadin-button id='modeless' >
+  <vaadin-button id='modeless'>
     Modeless
   </vaadin-button>
-  <vcf-popup modeless for='modeless'>
+  <vcf-popup for='modeless' modeless>
     <template>
       <style>
         #container {
@@ -98,16 +116,16 @@
     </template>
   </vcf-popup>
 
-  <vaadin-button id='header-only' >
+  <vaadin-button id='header-only'>
     Header only
   </vaadin-button>
-  <vcf-popup  for='header-only' header-title='This is header'>
+  <vcf-popup for='header-only' header-title='This is header'>
     <template>
       <style>
-      #container {
-        padding: 5px 10px;
-        max-width: 400px;
-      }
+        #container {
+          padding: 5px 10px;
+          max-width: 400px;
+        }
       </style>
       <div id='container'>
         <p>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet,<br>Lorem ipsum dolor sit amet</p>
@@ -118,7 +136,7 @@
     </template>
   </vcf-popup>
 
-  <vaadin-button id='close-on-click' >
+  <vaadin-button id='close-on-click'>
     Close on click
   </vaadin-button>
   <vcf-popup close-on-click for='close-on-click'>
@@ -138,7 +156,7 @@
     </template>
   </vcf-popup>
 
-  <vaadin-button id='close-on-scroll' >
+  <vaadin-button id='close-on-scroll'>
     Close on scroll
   </vaadin-button>
   <vcf-popup close-on-scroll for='close-on-scroll'>
@@ -155,10 +173,10 @@
     </template>
   </vcf-popup>
 
-  <vaadin-button id='header-content-only' >
+  <vaadin-button id='header-content-only'>
     Content in header
   </vaadin-button>
-  <vcf-popup  for='header-content-only'>
+  <vcf-popup for='header-content-only'>
     <template>
       <style>
         #container {
@@ -180,7 +198,7 @@
     </template>
   </vcf-popup>
 
-  <script type="module">
+  <script type='module'>
     const vcfPopup = document.querySelector('vcf-popup[for="header-content-only"]');
 
     vcfPopup.headerRenderer = (root) => {
@@ -201,10 +219,10 @@
     };
   </script>
 
-  <vaadin-button id='header-title-and-content' >
+  <vaadin-button id='header-title-and-content'>
     Title and content in header
   </vaadin-button>
-  <vcf-popup  for='header-title-and-content' header-title='This is header'>
+  <vcf-popup for='header-title-and-content' header-title='This is header'>
     <template>
       <style>
         #container {
@@ -221,7 +239,7 @@
     </template>
   </vcf-popup>
 
-  <script type="module">
+  <script type='module'>
     const vcfPopup = document.querySelector('vcf-popup[for="header-title-and-content"]');
 
     vcfPopup.headerRenderer = (root) => {
@@ -262,7 +280,7 @@
     </template>
   </vcf-popup>
 
-  <script type="module">
+  <script type='module'>
     const vcfPopup = document.querySelector('vcf-popup[for="footer-content"]');
 
     vcfPopup.footerRenderer = (root) => {
@@ -286,7 +304,7 @@
   <vaadin-button id='header-footer-content'>
     Content in header and footer
   </vaadin-button>
-  <vcf-popup modeless header-title='My popup title' for='header-footer-content'>
+  <vcf-popup for='header-footer-content' header-title='My popup title' modeless>
     <template>
       <style>
         #container {
@@ -301,7 +319,7 @@
     </template>
   </vcf-popup>
 
-  <script type="module">
+  <script type='module'>
     const vcfPopup = document.querySelector('vcf-popup[for="header-footer-content"]');
 
     vcfPopup.headerRenderer = (root) => {
@@ -315,7 +333,7 @@
         vcfPopup.opened = false;
       });
 
-      root.append( button);
+      root.append(button);
     };
 
     vcfPopup.footerRenderer = (root) => {
@@ -326,16 +344,16 @@
       saveButton.textContent = 'Save';
       saveButton.theme = 'primary';
       saveButton.addEventListener('click', event => {
-        console.log("Save clicked");
+        console.log('Save clicked');
         vcfPopup.opened = false;
-      })
+      });
 
       const cancelButton = document.createElement('vaadin-button');
       cancelButton.textContent = 'Cancel';
       cancelButton.addEventListener('click', event => {
-        console.log("Cancel clicked");
+        console.log('Cancel clicked');
         vcfPopup.opened = false;
-      })
+      });
 
       root.append(cancelButton, saveButton);
     };
@@ -372,7 +390,7 @@
     </template>
   </vcf-popup>
 
-  <script type="module">
+  <script type='module'>
     const vcfPopup = document.querySelector('vcf-popup[for="popup-with-long-content"]');
 
     vcfPopup.footerRenderer = (root) => {
@@ -418,9 +436,9 @@
       </div>
     </template>
   </vcf-popup>
-<vaadin-button id='target-aligned-right' style="align-self: end">
-  Target aligned right
-</vaadin-button>
+  <vaadin-button id='target-aligned-right' style='align-self: end'>
+    Target aligned right
+  </vaadin-button>
   <vcf-popup for='target-aligned-right'>
     <template>
       <style>
@@ -473,16 +491,16 @@
       </div>
     </template>
   </vcf-popup>
-  <script type="module">
+  <script type='module'>
     const button = document.querySelector('#button-to-open-popup-without-target');
     button.addEventListener('click', () => {
       const popup = document.querySelector('#popup-without-target');
       popup.show();
-    })
+    });
   </script>
   <vaadin-text-area id='description-text-area'
-    label="Description"
-    value="This is text in text area This is text in text area This is text in text area This is text in text area"
+                    label='Description'
+                    value='This is text in text area This is text in text area This is text in text area This is text in text area'
   ></vaadin-text-area>
   <vcf-popup for='description-text-area'>
     <template>
@@ -505,8 +523,8 @@
       </div>
     </template>
   </vcf-popup>
-  <vaadin-text-field id="street-address-text-field" label="Street Address" value="Ruukinkatu 2" clear-button-visible>
-    <vaadin-icon slot="prefix" icon="vaadin:map-marker"></vaadin-icon>
+  <vaadin-text-field clear-button-visible id='street-address-text-field' label='Street Address' value='Ruukinkatu 2'>
+    <vaadin-icon icon='vaadin:map-marker' slot='prefix'></vaadin-icon>
   </vaadin-text-field>
   <vcf-popup for='street-address-text-field'>
     <template>
@@ -529,7 +547,7 @@
       </div>
     </template>
   </vcf-popup>
-  <vaadin-time-picker id="alarm-time-picker" label="Alarm" value="07:00"></vaadin-time-picker>
+  <vaadin-time-picker id='alarm-time-picker' label='Alarm' value='07:00'></vaadin-time-picker>
   <vcf-popup for='alarm-time-picker'>
     <template>
       <style>
@@ -551,7 +569,7 @@
       </div>
     </template>
   </vcf-popup>
-  <grid-vcf-popup-integration-demo style="align-self: stretch"></grid-vcf-popup-integration-demo>
+  <grid-vcf-popup-integration-demo style='align-self: stretch'></grid-vcf-popup-integration-demo>
 
 </main>
 </body>
