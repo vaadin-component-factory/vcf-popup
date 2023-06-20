@@ -20,6 +20,7 @@ export class GridVcfPopupIntegrationDemo extends LitElement {
           <vcf-popup
             modeless
             close-on-scroll
+            theme="pointer-arrow"
             position="end"
             for="popupBtn${person.id}"
             header-title="${person.firstName} ${person.lastName} "
