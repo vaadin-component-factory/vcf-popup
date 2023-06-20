@@ -23,6 +23,71 @@ import { css, registerStyles } from '@vaadin/vaadin-themable-mixin/vaadin-themab
 registerStyles(
   'vcf-popup-overlay',
   css`
+    :host(:not([phone])) [part='overlay'] {
+      overflow: visible;
+      position: relative;
+    }
+
+    :host([top-aligned][preferred-position='bottom']:not([phone])) [part='overlay'] {
+      margin-top: 0.5rem;
+    }
+
+    :host([top-aligned][preferred-position='bottom']:not([phone])) [part='caret'] {
+      position: absolute;
+      border-left: 0.5rem solid transparent;
+      border-right: 0.5rem solid transparent;
+      border-bottom: 0.5rem solid var(--lumo-base-color);
+      height: 0;
+      width: 0;
+
+      filter: drop-shadow(0px -2px 1px var(--lumo-shade-10pct));
+    }
+
+    :host([bottom-aligned][preferred-position='bottom']:not([phone])) [part='overlay'] {
+      margin-bottom: 0.5rem;
+    }
+
+    :host([bottom-aligned][preferred-position='bottom']:not([phone])) [part='caret'] {
+      position: absolute;
+      border-left: 0.5rem solid transparent;
+      border-right: 0.5rem solid transparent;
+      border-top: 0.5rem solid var(--lumo-base-color);
+      height: 0;
+      width: 0;
+
+      filter: drop-shadow(0px 2px 1px var(--lumo-shade-10pct));
+    }
+
+    :host([start-aligned][preferred-position='end']:not([phone])) [part='overlay'] {
+      margin-inline-start: 0.5rem;
+    }
+
+    :host([start-aligned][preferred-position='end']:not([phone])) [part='caret'] {
+      position: absolute;
+      border-top: 0.5rem solid transparent;
+      border-bottom: 0.5rem solid transparent;
+      border-right: 0.5rem solid var(--lumo-base-color);
+      height: 0;
+      width: 0;
+
+      filter: drop-shadow(-2px 0 1px var(--lumo-shade-10pct));
+    }
+
+    :host([end-aligned][preferred-position='end']:not([phone])) [part='overlay'] {
+      margin-inline-end: 0.5rem;
+    }
+
+    :host([end-aligned][preferred-position='end']:not([phone])) [part='caret'] {
+      position: absolute;
+      border-top: 0.5rem solid transparent;
+      border-bottom: 0.5rem solid transparent;
+      border-left: 0.5rem solid var(--lumo-base-color);
+      height: 0;
+      width: 0;
+
+      filter: drop-shadow(2px 0 1px var(--lumo-shade-10pct));
+    }
+
     [part='header'],
     [part='header-content'],
     [part='footer'] {
@@ -115,6 +180,11 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
       resizerContainer.classList.add('resizer-container');
       resizerContainer.appendChild(contentPart);
       overlayPart.appendChild(resizerContainer);
+
+      const caret = document.createElement('div');
+      caret.setAttribute('part', 'caret');
+      caret.id = 'caret';
+      resizerContainer.appendChild(caret);
 
       const headerContainer = document.createElement('header');
       headerContainer.setAttribute('part', 'header');
@@ -424,21 +494,70 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
       return;
     }
 
-    if (this.noHorizontalOverlap) {
-      const targetRect = this.positionTarget.getBoundingClientRect();
-      // Using previous size to fix a case where window resize may cause the overlay to be squeezed
-      // smaller than its current space before the fit-calculations. Taken from PositionMixin#__shouldAlignStartVertically().
-      const overlayHeight =
-        this.requiredVerticalSpace || Math.max(this.__oldContentHeight || 0, this.$.overlay.offsetHeight);
-      const offset = targetRect.height / 2 - overlayHeight / 2;
+    if (this.preferredPosition === 'end') {
+      this._centerVertically();
+    }
 
-      if (this.style.top) {
-        const currentValue = parseFloat(this.style.top);
-        this.style.top = Math.max(currentValue + offset, 15) + 'px';
+    this._updateCaretPosition();
+  }
+
+  _centerVertically() {
+    const targetRect = this.positionTarget.getBoundingClientRect();
+    // Using previous size to fix a case where window resize may cause the overlay to be squeezed
+    // smaller than its current space before the fit-calculations. Taken from PositionMixin#__shouldAlignStartVertically().
+    const overlayHeight =
+      this.requiredVerticalSpace || Math.max(this.__oldContentHeight || 0, this.$.overlay.offsetHeight);
+    const offset = targetRect.height / 2 - overlayHeight / 2;
+
+    if (this.style.top) {
+      const currentValue = parseFloat(this.style.top);
+      this.style.top = Math.max(currentValue + offset, 15) + 'px';
+    }
+    if (this.style.bottom) {
+      const currentValue = parseFloat(this.style.bottom);
+      this.style.bottom = Math.max(currentValue + offset, 15) + 'px';
+    }
+  }
+
+  _updateCaretPosition() {
+    const targetRect = this.positionTarget.getBoundingClientRect();
+    const caretRect = this.$.caret.getBoundingClientRect();
+    const overlayRect = this.$.overlay.getBoundingClientRect();
+
+    this.$.caret.style.top = null;
+    this.$.caret.style.bottom = null;
+    this.$.caret.style.left = null;
+    this.$.caret.style.right = null;
+
+    if (this.preferredPosition === 'bottom') {
+      const offset = targetRect.width / 2 - caretRect.width / 2;
+      if (this.hasAttribute('start-aligned')) {
+        this.$.caret.style.left = offset + 'px';
+      } else {
+        this.$.caret.style.right = offset + 'px';
       }
-      if (this.style.bottom) {
-        const currentValue = parseFloat(this.style.bottom);
-        this.style.bottom = Math.max(currentValue + offset, 15) + 'px';
+      if (this.hasAttribute('top-aligned')) {
+        this.$.caret.style.top = -caretRect.height + 'px';
+      } else {
+        this.$.caret.style.bottom = -caretRect.height + 'px';
+      }
+    }
+
+    if (this.preferredPosition === 'end') {
+      let offset = targetRect.height / 2 - caretRect.height / 2;
+      if (this.hasAttribute('start-aligned')) {
+        this.$.caret.style.left = -caretRect.width + 'px';
+      } else {
+        this.$.caret.style.right = -caretRect.width + 'px';
+      }
+      if (this.hasAttribute('top-aligned')) {
+        offset = offset + (targetRect.y - overlayRect.y);
+        offset = Math.max(offset, 3); // do not display caret at the corner of the popup, but slightly below it
+        this.$.caret.style.top = offset + 'px';
+      } else {
+        offset = offset + (overlayRect.bottom - targetRect.bottom);
+        offset = Math.max(offset, 3); // do not display caret at the corner of the popup, but slightly above it
+        this.$.caret.style.bottom = offset + 'px';
       }
     }
   }

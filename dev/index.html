@@ -14,6 +14,9 @@
     import '../theme/lumo/vcf-popup';
     import './grid-vcf-popup-integration-demo';
     import '@vaadin/radio-group';
+    import '@vaadin/text-area';
+    import '@vaadin/text-field';
+    import '@vaadin/time-picker';
   </script>
   <script>
     window.addEventListener('WebComponentsReady', () => document.querySelector('main').classList.remove('hidden'));
@@ -477,7 +480,77 @@
       popup.show();
     })
   </script>
+  <vaadin-text-area id='description-text-area'
+    label="Description"
+    value="This is text in text area This is text in text area This is text in text area This is text in text area"
+  ></vaadin-text-area>
+  <vcf-popup for='description-text-area'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 15px;
+        }
 
+        vcf-popup-overlay::part(content) {
+          overflow: auto;
+          max-height: 25rem;
+          max-width: 30rem;
+        }
+
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+          sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+          asperiores repellat.</p>
+      </div>
+    </template>
+  </vcf-popup>
+  <vaadin-text-field id="street-address-text-field" label="Street Address" value="Ruukinkatu 2" clear-button-visible>
+    <vaadin-icon slot="prefix" icon="vaadin:map-marker"></vaadin-icon>
+  </vaadin-text-field>
+  <vcf-popup for='street-address-text-field'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 15px;
+        }
+
+        vcf-popup-overlay::part(content) {
+          overflow: auto;
+          max-height: 25rem;
+          max-width: 30rem;
+        }
+
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+          sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+          asperiores repellat.</p>
+      </div>
+    </template>
+  </vcf-popup>
+  <vaadin-time-picker id="alarm-time-picker" label="Alarm" value="07:00"></vaadin-time-picker>
+  <vcf-popup for='alarm-time-picker'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 15px;
+        }
+
+        vcf-popup-overlay::part(content) {
+          overflow: auto;
+          max-height: 25rem;
+          max-width: 30rem;
+        }
+
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+          sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+          asperiores repellat.</p>
+      </div>
+    </template>
+  </vcf-popup>
   <grid-vcf-popup-integration-demo style="align-self: stretch"></grid-vcf-popup-integration-demo>
 
 </main>
