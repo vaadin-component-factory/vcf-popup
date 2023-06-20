@@ -23,13 +23,8 @@ import { css, registerStyles } from '@vaadin/vaadin-themable-mixin/vaadin-themab
 registerStyles(
   'vcf-popup-overlay',
   css`
-    :host(:not([phone])) [part='overlay'] {
-      overflow: visible;
-      position: relative;
-    }
-
-    :host([top-aligned][preferred-position='bottom']:not([phone])) [part='overlay'] {
-      margin-top: 0.5rem;
+    :host([top-aligned][preferred-position='bottom']:not([phone])) {
+      padding-top: 0.5rem;
     }
 
     :host([top-aligned][preferred-position='bottom']:not([phone])) [part='caret'] {
@@ -37,14 +32,15 @@ registerStyles(
       border-left: 0.5rem solid transparent;
       border-right: 0.5rem solid transparent;
       border-bottom: 0.5rem solid var(--lumo-base-color);
+      top: 0;
       height: 0;
       width: 0;
 
       filter: drop-shadow(0px -2px 1px var(--lumo-shade-10pct));
     }
 
-    :host([bottom-aligned][preferred-position='bottom']:not([phone])) [part='overlay'] {
-      margin-bottom: 0.5rem;
+    :host([bottom-aligned][preferred-position='bottom']:not([phone])) {
+      padding-bottom: 0.5rem;
     }
 
     :host([bottom-aligned][preferred-position='bottom']:not([phone])) [part='caret'] {
@@ -52,14 +48,15 @@ registerStyles(
       border-left: 0.5rem solid transparent;
       border-right: 0.5rem solid transparent;
       border-top: 0.5rem solid var(--lumo-base-color);
+      bottom: 0;
       height: 0;
       width: 0;
 
       filter: drop-shadow(0px 2px 1px var(--lumo-shade-10pct));
     }
 
-    :host([start-aligned][preferred-position='end']:not([phone])) [part='overlay'] {
-      margin-inline-start: 0.5rem;
+    :host([start-aligned][preferred-position='end']:not([phone])) {
+      padding-inline-start: 0.5rem;
     }
 
     :host([start-aligned][preferred-position='end']:not([phone])) [part='caret'] {
@@ -67,14 +64,15 @@ registerStyles(
       border-top: 0.5rem solid transparent;
       border-bottom: 0.5rem solid transparent;
       border-right: 0.5rem solid var(--lumo-base-color);
+      left: 0;
       height: 0;
       width: 0;
 
       filter: drop-shadow(-2px 0 1px var(--lumo-shade-10pct));
     }
 
-    :host([end-aligned][preferred-position='end']:not([phone])) [part='overlay'] {
-      margin-inline-end: 0.5rem;
+    :host([end-aligned][preferred-position='end']:not([phone])) {
+      padding-inline-end: 0.5rem;
     }
 
     :host([end-aligned][preferred-position='end']:not([phone])) [part='caret'] {
@@ -82,6 +80,7 @@ registerStyles(
       border-top: 0.5rem solid transparent;
       border-bottom: 0.5rem solid transparent;
       border-left: 0.5rem solid var(--lumo-base-color);
+      right: 0;
       height: 0;
       width: 0;
 
@@ -184,7 +183,7 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
       const caret = document.createElement('div');
       caret.setAttribute('part', 'caret');
       caret.id = 'caret';
-      resizerContainer.appendChild(caret);
+      memoizedTemplate.content.appendChild(caret);
 
       const headerContainer = document.createElement('header');
       headerContainer.setAttribute('part', 'header');
@@ -536,20 +535,10 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
       } else {
         this.$.caret.style.right = offset + 'px';
       }
-      if (this.hasAttribute('top-aligned')) {
-        this.$.caret.style.top = -caretRect.height + 'px';
-      } else {
-        this.$.caret.style.bottom = -caretRect.height + 'px';
-      }
     }
 
     if (this.preferredPosition === 'end') {
       let offset = targetRect.height / 2 - caretRect.height / 2;
-      if (this.hasAttribute('start-aligned')) {
-        this.$.caret.style.left = -caretRect.width + 'px';
-      } else {
-        this.$.caret.style.right = -caretRect.width + 'px';
-      }
       if (this.hasAttribute('top-aligned')) {
         offset = offset + (targetRect.y - overlayRect.y);
         offset = Math.max(offset, 3); // do not display caret at the corner of the popup, but slightly below it
