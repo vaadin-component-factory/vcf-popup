@@ -58,7 +58,7 @@
     document.querySelector('#options').addEventListener('value-changed', (event) => {
       document.querySelectorAll('vcf-popup').forEach((popup) => {
         if (event.detail.value.includes('pointer-arrow-theme')) {
-          popup.theme = 'pointer-arrow debil';
+          popup.theme = 'pointer-arrow';
         } else {
           popup.theme = null;
         }
