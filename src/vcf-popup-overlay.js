@@ -43,6 +43,21 @@ registerStyles(
       padding-bottom: 0.5rem;
     }
 
+    /* the following will color the pointer arrow to the same color as the popup footer */
+    :host([theme~='pointer-arrow'][has-footer][bottom-aligned][preferred-position='bottom']:not([phone]))
+      [part='pointer-arrow']:after {
+      content: '';
+      display: block;
+      position: absolute;
+      border-left: 0.5rem solid transparent;
+      border-right: 0.5rem solid transparent;
+      border-top: 0.5rem solid var(--lumo-contrast-5pct);
+      bottom: 0;
+      left: -0.5rem;
+      height: 0;
+      width: 0;
+    }
+
     :host([theme~='pointer-arrow'][bottom-aligned][preferred-position='bottom']:not([phone])) [part='pointer-arrow'] {
       position: absolute;
       border-left: 0.5rem solid transparent;
