@@ -116,6 +116,10 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
       resizerContainer.appendChild(contentPart);
       overlayPart.appendChild(resizerContainer);
 
+      const pointerArrow = document.createElement('div');
+      pointerArrow.setAttribute('part', 'pointer-arrow');
+      memoizedTemplate.content.appendChild(pointerArrow);
+
       const headerContainer = document.createElement('header');
       headerContainer.setAttribute('part', 'header');
       resizerContainer.insertBefore(headerContainer, contentPart);
@@ -217,6 +221,8 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
     this.$.content.addEventListener('scroll', () => {
       this.__updateOverflow();
     });
+
+    this._pointerArrow = this.shadowRoot.querySelector('[part="pointer-arrow"]');
   }
 
   __preferredPositionChanged(position) {
@@ -424,22 +430,88 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
       return;
     }
 
-    if (this.noHorizontalOverlap) {
-      const targetRect = this.positionTarget.getBoundingClientRect();
-      // Using previous size to fix a case where window resize may cause the overlay to be squeezed
-      // smaller than its current space before the fit-calculations. Taken from PositionMixin#__shouldAlignStartVertically().
-      const overlayHeight =
-        this.requiredVerticalSpace || Math.max(this.__oldContentHeight || 0, this.$.overlay.offsetHeight);
-      const offset = targetRect.height / 2 - overlayHeight / 2;
+    if (this.preferredPosition === 'end') {
+      this._centerVertically();
+    }
 
-      if (this.style.top) {
-        const currentValue = parseFloat(this.style.top);
-        this.style.top = Math.max(currentValue + offset, 15) + 'px';
-      }
-      if (this.style.bottom) {
-        const currentValue = parseFloat(this.style.bottom);
-        this.style.bottom = Math.max(currentValue + offset, 15) + 'px';
-      }
+    if (this._theme && this._theme.includes('pointer-arrow')) {
+      this._updatePointerArrowPosition();
+    }
+  }
+
+  _centerVertically() {
+    const targetRect = this.positionTarget.getBoundingClientRect();
+    // Using previous size to fix a case where window resize may cause the overlay to be squeezed
+    // smaller than its current space before the fit-calculations. Taken from PositionMixin#__shouldAlignStartVertically().
+    const overlayHeight =
+      this.requiredVerticalSpace || Math.max(this.__oldContentHeight || 0, this.$.overlay.offsetHeight);
+    const offset = targetRect.height / 2 - overlayHeight / 2;
+
+    if (this.style.top) {
+      const currentValue = parseFloat(this.style.top);
+      this.style.top = Math.max(currentValue + offset, 15) + 'px';
+    }
+    if (this.style.bottom) {
+      const currentValue = parseFloat(this.style.bottom);
+      this.style.bottom = Math.max(currentValue + offset, 15) + 'px';
+    }
+  }
+
+  _updatePointerArrowPosition() {
+    new PopupPointerArrowPositionUpdater(this).updatePosition();
+  }
+}
+
+class PopupPointerArrowPositionUpdater {
+  constructor(popupOverlay) {
+    this._pointerArrow = popupOverlay._pointerArrow;
+    this._preferredPosition = popupOverlay.preferredPosition;
+    this._isPopupStartAligned = popupOverlay.hasAttribute('start-aligned');
+    this._isPopupTopAligned = popupOverlay.hasAttribute('top-aligned');
+
+    this._targetRect = popupOverlay.positionTarget.getBoundingClientRect();
+    this._pointerArrowRect = this._pointerArrow.getBoundingClientRect();
+    this._overlayRect = popupOverlay.$.overlay.getBoundingClientRect();
+  }
+
+  updatePosition() {
+    this._clearPositionProperties();
+
+    if (this._preferredPosition === 'bottom') {
+      this._alignToHorizontalCenterOfTarget();
+    }
+
+    if (this._preferredPosition === 'end') {
+      this._alignToVerticalCenterOfTarget();
+    }
+  }
+
+  _clearPositionProperties() {
+    this._pointerArrow.style.top = null;
+    this._pointerArrow.style.bottom = null;
+    this._pointerArrow.style.left = null;
+    this._pointerArrow.style.right = null;
+  }
+
+  _alignToHorizontalCenterOfTarget() {
+    const offset = this._targetRect.width / 2 - this._pointerArrowRect.width / 2;
+    if (this._isPopupStartAligned) {
+      this._pointerArrow.style.left = offset + 'px';
+    } else {
+      this._pointerArrow.style.right = offset + 'px';
+    }
+  }
+
+  _alignToVerticalCenterOfTarget() {
+    let offset = this._targetRect.height / 2 - this._pointerArrowRect.height / 2;
+    if (this._isPopupTopAligned) {
+      offset = offset + (this._targetRect.y - this._overlayRect.y);
+      offset = Math.max(offset, 3); // do not display pointer arrow at the corner of the popup, but slightly below it
+      this._pointerArrow.style.top = offset + 'px';
+    } else {
+      offset = offset + (this._overlayRect.bottom - this._targetRect.bottom);
+      offset = Math.max(offset, 3); // do not display  pointer arrow at the corner of the popup, but slightly above it
+      this._pointerArrow.style.bottom = offset + 'px';
     }
   }
 }

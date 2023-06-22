@@ -37,7 +37,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         theme$="[[theme]]"
         with-backdrop="[[_phone]]"
         phone$="[[_phone]]"
-        position-target="[[target]]"
+        position-target="[[_positionTarget]]"
         close-on-scroll="[[closeOnScroll]]"
         modeless="[[modeless]]"
         focus-trap
@@ -170,7 +170,9 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
       _phoneMediaQuery: {
         value: '(max-width: 420px), (max-height: 420px)'
-      }
+      },
+
+      _positionTarget: Object
     };
   }
 
@@ -325,12 +327,24 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     if (target) {
       target.addEventListener('click', this.show);
       target.setAttribute('has-popup', '');
+      this.__setPositionTarget(target);
 
       // Wait before observing to avoid Chrome issue.
       requestAnimationFrame(() => {
         this.__targetVisibilityObserver.observe(target);
       });
     }
+  }
+
+  __setPositionTarget(target) {
+    // Make sure that target element is rendered including shadowRoot
+    setTimeout(() => {
+      // position the popup relative to the internal input field for Vaadin components
+      // which have input fields rather than overall copmonents (including label,
+      // helper texts etc.)
+      const inputField = target.shadowRoot && target.shadowRoot.querySelector('[part="input-field"]');
+      this._positionTarget = inputField ? inputField : target;
+    });
   }
 
   _detachFromTarget(target) {
