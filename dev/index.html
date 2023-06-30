@@ -47,6 +47,13 @@
     <vaadin-radio-button class='position-change-option' label='To the right of the target element'
                          value='end'></vaadin-radio-button>
   </vaadin-radio-group>
+  <vaadin-radio-group id='alignment-change' label='Popup alignment' theme='vertical'>
+    <vaadin-radio-button checked class='alignment-change' label='Default - alignment not set'
+                         value='default'></vaadin-radio-button>
+    <vaadin-radio-button class='alignment-change' label='Centered to the target element'
+                         value='center'></vaadin-radio-button>
+  </vaadin-radio-group>
+
 
   <script type='module'>
     document.querySelector('#position-change').addEventListener('value-changed', (event) => {
@@ -65,6 +72,15 @@
       });
     });
 
+    document.querySelector('#alignment-change').addEventListener('value-changed', (event) => {
+      document.querySelectorAll('vcf-popup').forEach((popup) => {
+        if (event.detail.value === 'default') {
+          popup.alignment = null;
+        } else {
+          popup.alignment = event.detail.value;
+        }
+      });
+    });
   </script>
   <hr>
   <vaadin-button id='basic' style='align-self: center'>

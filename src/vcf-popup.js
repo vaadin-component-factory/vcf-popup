@@ -166,6 +166,17 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         observer: '__positionChanged'
       },
 
+      /**
+       * Alignment of the popup with respect to its target.
+       * Supported values:
+       * `center` - the popup will be aligned to the center of the target element
+       * By default alignment is not set
+       */
+      alignment: {
+        type: String,
+        observer: '__alignmentChanged'
+      },
+
       _phone: Boolean,
 
       _phoneMediaQuery: {
@@ -287,6 +298,10 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   __positionChanged(position) {
     this.$.popupOverlay.preferredPosition = position;
+  }
+
+  __alignmentChanged(alignment) {
+    this.$.popupOverlay.preferredAlignment = alignment;
   }
 
   __targetChanged(target, oldTarget) {
