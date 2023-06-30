@@ -176,6 +176,18 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
         value: 'bottom',
         reflectToAttribute: true,
         observer: '__preferredPositionChanged'
+      },
+
+      /**
+       * Alignment of the popup with respect to its target.
+       * Supported values:
+       * `center` - the popup will be aligned to the center of the target element
+       * By default alignment is not set
+       */
+      preferredAlignment: {
+        type: String,
+        reflectToAttribute: true,
+        observer: '__preferredAlignmentChanged'
       }
     };
   }
@@ -233,6 +245,10 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
       this.noHorizontalOverlap = true;
       this.noVerticalOverlap = false;
     }
+  }
+
+  __preferredAlignmentChanged() {
+    this._updatePosition();
   }
 
   /** @private */
@@ -430,7 +446,7 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
       return;
     }
 
-    if (this.preferredPosition === 'end') {
+    if (this.preferredPosition === 'end' && this.preferredAlignment === 'center') {
       this._centerVertically();
     }
 
