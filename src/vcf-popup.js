@@ -40,7 +40,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         position-target="[[_positionTarget]]"
         close-on-scroll="[[closeOnScroll]]"
         modeless="[[modeless]]"
-        focus-trap
+        focus-trap="[[focusTrap]]"
         restore-focus-on-close
       >
       </vcf-popup-overlay>
@@ -152,6 +152,16 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         type: Boolean,
         value: false,
         reflectToAttribute: true
+      },
+
+      /**
+       * When true the overlay will receive focus when opened and
+       * the Tab and Shift+Tab keys will cycle through the Popup's
+       * tabbable elements but will not leave the Popup.
+       */
+      focusTrap: {
+        type: Boolean,
+        value: false
       },
 
       /**

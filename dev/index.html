@@ -318,7 +318,7 @@
   </script>
 
   <vaadin-button id='header-footer-content'>
-    Content in header and footer
+    Content in header and footer (+focusTrap)
   </vaadin-button>
   <vcf-popup for='header-footer-content' header-title='My popup title' modeless>
     <template>
@@ -337,6 +337,7 @@
 
   <script type='module'>
     const vcfPopup = document.querySelector('vcf-popup[for="header-footer-content"]');
+    vcfPopup.focusTrap = true;
 
     vcfPopup.headerRenderer = (root) => {
       if (root.firstChild) {
