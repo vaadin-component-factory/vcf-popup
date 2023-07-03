@@ -118,7 +118,7 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
 
       const pointerArrow = document.createElement('div');
       pointerArrow.setAttribute('part', 'pointer-arrow');
-      memoizedTemplate.content.appendChild(pointerArrow);
+      overlayPart.appendChild(pointerArrow);
 
       const headerContainer = document.createElement('header');
       headerContainer.setAttribute('part', 'header');
