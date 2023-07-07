@@ -457,11 +457,7 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
 
   _centerVertically() {
     const targetRect = this.positionTarget.getBoundingClientRect();
-    // Using previous size to fix a case where window resize may cause the overlay to be squeezed
-    // smaller than its current space before the fit-calculations. Taken from PositionMixin#__shouldAlignStartVertically().
-    const overlayHeight =
-      this.requiredVerticalSpace || Math.max(this.__oldContentHeight || 0, this.$.overlay.offsetHeight);
-    const offset = targetRect.height / 2 - overlayHeight / 2;
+    const offset = targetRect.height / 2 - this._getNormalizedOverlayHeight() / 2;
 
     if (this.style.top) {
       const currentValue = parseFloat(this.style.top);
@@ -476,6 +472,18 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
   _updatePointerArrowPosition() {
     new PopupPointerArrowPositionUpdater(this).updatePosition();
   }
+
+  _getNormalizedOverlayHeight() {
+    // Using previous size to fix a case where window resize may cause the overlay to be squeezed
+    // smaller than its current space before the fit-calculations. Taken from PositionMixin#__shouldAlignStartHorizontally().
+    return this.requiredVerticalSpace || Math.max(this.__oldContentHeight || 0, this.$.overlay.offsetHeight);
+  }
+
+  _getNormalizedOverlayWidth() {
+    // Using previous size to fix a case where window resize may cause the overlay to be squeezed
+    // smaller than its current space before the fit-calculations. Taken from PositionMixin#__shouldAlignStartVertically().
+    return Math.max(this.__oldContentWidth || 0, this.$.overlay.offsetWidth);
+  }
 }
 
 class PopupPointerArrowPositionUpdater {
@@ -488,17 +496,19 @@ class PopupPointerArrowPositionUpdater {
     this._targetRect = popupOverlay.positionTarget.getBoundingClientRect();
     this._pointerArrowRect = this._pointerArrow.getBoundingClientRect();
     this._overlayRect = popupOverlay.$.overlay.getBoundingClientRect();
+    this._overlayWidth = popupOverlay._getNormalizedOverlayWidth();
+    this._overlayHeight = popupOverlay._getNormalizedOverlayHeight();
   }
 
   updatePosition() {
     this._clearPositionProperties();
 
     if (this._preferredPosition === 'bottom') {
-      this._alignToHorizontalCenterOfTarget();
+      this._positionArrowHorizontally();
     }
 
     if (this._preferredPosition === 'end') {
-      this._alignToVerticalCenterOfTarget();
+      this._positionArrowVertically();
     }
   }
 
@@ -507,6 +517,30 @@ class PopupPointerArrowPositionUpdater {
     this._pointerArrow.style.bottom = null;
     this._pointerArrow.style.left = null;
     this._pointerArrow.style.right = null;
+  }
+
+  _positionArrowHorizontally() {
+    if (this._isTargetWiderThanOverlay()) {
+      this._alignToHorizontalCenterOfOverlay();
+    } else {
+      this._alignToHorizontalCenterOfTarget();
+    }
+  }
+
+  _positionArrowVertically() {
+    if (this._isTargetTallerThanOverlay()) {
+      this._alignToVerticalCenterOfOverlay();
+    } else {
+      this._alignToVerticalCenterOfTarget();
+    }
+  }
+
+  _isTargetWiderThanOverlay() {
+    return this._targetRect.width > this._overlayWidth;
+  }
+
+  _isTargetTallerThanOverlay() {
+    return this._targetRect.height > this._overlayHeight;
   }
 
   _alignToHorizontalCenterOfTarget() {
@@ -518,15 +552,25 @@ class PopupPointerArrowPositionUpdater {
     }
   }
 
+  _alignToHorizontalCenterOfOverlay() {
+    const offset = this._overlayWidth / 2 - this._pointerArrowRect.width / 2;
+    this._pointerArrow.style.left = offset + 'px';
+  }
+
+  _alignToVerticalCenterOfOverlay() {
+    const offset = this._overlayHeight / 2 - this._pointerArrowRect.height / 2;
+    this._pointerArrow.style.top = offset + 'px';
+  }
+
   _alignToVerticalCenterOfTarget() {
     let offset = this._targetRect.height / 2 - this._pointerArrowRect.height / 2;
     if (this._isPopupTopAligned) {
       offset = offset + (this._targetRect.y - this._overlayRect.y);
-      offset = Math.max(offset, 3); // do not display pointer arrow at the corner of the popup, but slightly below it
+      offset = Math.max(offset, 3); // do not display pointer arrow at the very corner of the popup, but slightly below it
       this._pointerArrow.style.top = offset + 'px';
     } else {
       offset = offset + (this._overlayRect.bottom - this._targetRect.bottom);
-      offset = Math.max(offset, 3); // do not display  pointer arrow at the corner of the popup, but slightly above it
+      offset = Math.max(offset, 3); // do not display  pointer arrow at the very corner of the popup, but slightly above it
       this._pointerArrow.style.bottom = offset + 'px';
     }
   }

@@ -587,7 +587,61 @@
     </template>
   </vcf-popup>
   <grid-vcf-popup-integration-demo style='align-self: stretch'></grid-vcf-popup-integration-demo>
+  <h3>Wide element test (click text below)</h3>
+  <p id="wide-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+    sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+    asperiores repellat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+    sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+    asperiores repellat.</p>
+  <vcf-popup for='wide-text'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 15px;
+        }
 
+        vcf-popup-overlay::part(content) {
+          overflow: auto;
+          max-height: 25rem;
+          max-width: 30rem;
+        }
+
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+          sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+          asperiores repellat.</p>
+      </div>
+    </template>
+  </vcf-popup>
+  <h3>Tall element test (click text below)</h3>
+  <p  id="tall-text" style="max-width: 300px">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+    sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+    asperiores repellat.
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+    sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+    asperiores repellat.</p>
+  <vcf-popup for='tall-text'>
+    <template>
+      <style>
+        #container {
+          padding: 5px 15px;
+        }
+
+        vcf-popup-overlay::part(content) {
+          overflow: auto;
+          max-height: 25rem;
+          max-width: 30rem;
+        }
+
+      </style>
+      <div id='container'>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+          sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
+          asperiores repellat.</p>
+      </div>
+    </template>
+  </vcf-popup>
 </main>
 </body>
 </html>
