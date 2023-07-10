@@ -35,12 +35,13 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         header-title="[[headerTitle]]"
         opened="{{opened}}"
         theme$="[[theme]]"
-        with-backdrop="[[_phone]]"
+        with-backdrop="[[_withBackdrop]]"
         phone$="[[_phone]]"
         position-target="[[_positionTarget]]"
         close-on-scroll="[[closeOnScroll]]"
         modeless="[[modeless]]"
         focus-trap="[[focusTrap]]"
+        highlight-target$="[[highlightTarget]]"
         restore-focus-on-close
       >
       </vcf-popup-overlay>
@@ -177,6 +178,15 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       },
 
       /**
+       * When true, the popup target will be highlighted, to make it absolutely clear what is the target of the popup.
+       */
+      highlightTarget: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+
+      /**
        * Alignment of the popup with respect to its target.
        * Supported values:
        * `center` - the popup will be aligned to the center of the target element
@@ -187,18 +197,23 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         observer: '__alignmentChanged'
       },
 
-      _phone: Boolean,
+      _phone: {
+        type: Boolean,
+        observer: '__phoneChanged'
+      },
 
       _phoneMediaQuery: {
         value: '(max-width: 420px), (max-height: 420px)'
       },
 
-      _positionTarget: Object
+      _positionTarget: Object,
+
+      _withBackdrop: Boolean
     };
   }
 
   static get observers() {
-    return ['_rendererChanged(headerRenderer, footerRenderer)'];
+    return ['_rendererChanged(headerRenderer, footerRenderer)', '_backdropDisplayChanged(_phone, highlightTarget)'];
   }
 
   constructor() {
@@ -314,6 +329,10 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     this.$.popupOverlay.preferredAlignment = alignment;
   }
 
+  _backdropDisplayChanged(phone, highlightTarget) {
+    this._withBackdrop = phone || highlightTarget;
+  }
+
   __targetChanged(target, oldTarget) {
     if (oldTarget) {
       this._detachFromTarget(oldTarget);
@@ -333,7 +352,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   _handleOverlayClick(event) {
-    if (!this.closeOnClick && !this._phone) {
+    if (!this.closeOnClick && !this._withBackdrop) {
       event.stopPropagation();
     }
   }

@@ -40,6 +40,7 @@
 
   <vaadin-checkbox-group id='options' label='Options' theme='vertical'>
     <vaadin-checkbox label='Show pointer arrow towards the target element' value='pointer-arrow-theme'></vaadin-checkbox>
+    <vaadin-checkbox label='Highlight target' value='highlight-target'></vaadin-checkbox>
   </vaadin-checkbox-group>
   <vaadin-radio-group id='position-change' label='Popup position' theme='vertical'>
     <vaadin-radio-button checked class='position-change-option' label='To the bottom of the target element'
@@ -69,6 +70,7 @@
         } else {
           popup.theme = null;
         }
+        popup.highlightTarget = event.detail.value.includes('highlight-target');
       });
     });
 
