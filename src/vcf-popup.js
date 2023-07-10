@@ -90,6 +90,18 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         observer: '__targetChanged'
       },
 
+      /**
+       * When set to false (default), the Popup will be shown when the target element (set either by 'for' or 'target' property)
+       * is clicked. When set to true, you have to open the Popup manually by calling the 'show()' method on the Popup element.
+       *
+       * By default, it's set to 'false' for backwards compatibility.
+       */
+      ignoreTargetClick: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+
       closeOnClick: {
         type: Boolean,
         value: false,
@@ -218,6 +230,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
+    this.__targetClicked = this.__targetClicked.bind(this);
     this._handleOverlayClick = this._handleOverlayClick.bind(this);
 
     this.__targetVisibilityObserver = new IntersectionObserver(
@@ -350,6 +363,12 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     }
   }
 
+  __targetClicked() {
+    if (!this.ignoreTargetClick) {
+      this.show();
+    }
+  }
+
   show() {
     this.opened = true;
   }
@@ -366,7 +385,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   _attachToTarget(target) {
     if (target) {
-      target.addEventListener('click', this.show);
+      target.addEventListener('click', this.__targetClicked);
       target.setAttribute('has-popup', '');
       this.__setPositionTarget(target);
 
@@ -390,7 +409,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   _detachFromTarget(target) {
     if (target) {
-      target.removeEventListener('click', this.show);
+      target.removeEventListener('click', this.__targetClicked);
       target.removeAttribute('has-popup');
       this.__targetVisibilityObserver.unobserve(target);
     }
