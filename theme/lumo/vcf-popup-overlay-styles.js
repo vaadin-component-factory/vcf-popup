@@ -79,6 +79,10 @@ const popupOverlay = css`
     display: block;
   }
 
+  :host([highlight-target]) [part='backdrop'] {
+    background-color: var(--lumo-shade-50pct);
+  }
+
   /* Animations */
 
   :host([opening][phone]) [part='overlay'] {

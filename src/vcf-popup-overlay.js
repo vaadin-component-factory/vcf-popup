@@ -450,9 +450,52 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
       this._centerVertically();
     }
 
+    if (this.hasAttribute('highlight-target')) {
+      this.highlightTargetInBackdrop();
+    } else {
+      this.$.backdrop.style.clipPath = null;
+    }
+
     if (this._theme && this._theme.includes('pointer-arrow')) {
       this._updatePointerArrowPosition();
     }
+  }
+
+  highlightTargetInBackdrop() {
+    const ENLARGE_TARGET_HOLE_BY_PIXELS = 5;
+    let targetRect = this.positionTarget.getBoundingClientRect();
+
+    targetRect = this._addPixelsAroundRect(targetRect, ENLARGE_TARGET_HOLE_BY_PIXELS);
+    this._makeHoleInBackdrop(targetRect);
+    this._repositionPopupToPointToBackropHole(ENLARGE_TARGET_HOLE_BY_PIXELS);
+  }
+
+  _repositionPopupToPointToBackropHole(pixelsToMove) {
+    let pxShift = pixelsToMove;
+    if (this.preferredPosition === 'end') {
+      pxShift = -pxShift;
+    }
+
+    if (this.style.bottom) {
+      this.style.bottom = parseFloat(this.style.bottom) + pxShift + 'px';
+    }
+    if (this.style.left) {
+      this.style.left = parseFloat(this.style.left) - pxShift + 'px';
+    }
+    if (this.style.top) {
+      this.style.top = parseFloat(this.style.top) + pxShift + 'px';
+    }
+    if (this.style.right) {
+      this.style.right = parseFloat(this.style.right) - pxShift + 'px';
+    }
+  }
+
+  _makeHoleInBackdrop(targetRect) {
+    const topLeft = targetRect.x + 'px ' + targetRect.y + 'px';
+    const topRight = targetRect.right + 'px ' + targetRect.y + 'px';
+    const bottomRight = targetRect.right + 'px ' + targetRect.bottom + 'px';
+    const bottomLeft = targetRect.x + 'px ' + targetRect.bottom + 'px';
+    this.$.backdrop.style.clipPath = `polygon(0px 0px,0 100%,100% 100%,100% 0px,0px 0px, ${topLeft}, ${topRight},${bottomRight},${bottomLeft},${topLeft})`;
   }
 
   _centerVertically() {
@@ -483,6 +526,14 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
     // Using previous size to fix a case where window resize may cause the overlay to be squeezed
     // smaller than its current space before the fit-calculations. Taken from PositionMixin#__shouldAlignStartVertically().
     return Math.max(this.__oldContentWidth || 0, this.$.overlay.offsetWidth);
+  }
+
+  _addPixelsAroundRect(targetRect, pixels) {
+    targetRect.x = targetRect.x - pixels;
+    targetRect.y = targetRect.y - pixels;
+    targetRect.width = targetRect.width + 2 * pixels;
+    targetRect.height = targetRect.height + 2 * pixels;
+    return targetRect;
   }
 }
 
