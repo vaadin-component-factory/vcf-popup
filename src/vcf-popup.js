@@ -197,10 +197,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         observer: '__alignmentChanged'
       },
 
-      _phone: {
-        type: Boolean,
-        observer: '__phoneChanged'
-      },
+      _phone: Boolean,
 
       _phoneMediaQuery: {
         value: '(max-width: 420px), (max-height: 420px)'
