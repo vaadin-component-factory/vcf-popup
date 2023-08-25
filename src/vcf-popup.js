@@ -120,6 +120,16 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       },
 
       /**
+       * Set the `aria-label` attribute for assistive technologies like
+       * screen readers. An empty string value for this property (the
+       * default) means that the `aria-label` attribute is not present.
+       */
+      ariaLabel: {
+        type: String,
+        value: ''
+      },
+
+      /**
        * String used for rendering a popup title.
        *
        * If both `headerTitle` and `headerRenderer` are defined, the title
@@ -222,7 +232,11 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   static get observers() {
-    return ['_rendererChanged(headerRenderer, footerRenderer)', '_backdropDisplayChanged(_phone, highlightTarget)'];
+    return [
+      '_rendererChanged(headerRenderer, footerRenderer)',
+      '_ariaLabelChanged(ariaLabel, headerTitle)',
+      '_backdropDisplayChanged(_phone, highlightTarget)'
+    ];
   }
 
   constructor() {
@@ -314,6 +328,15 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
           }
         })
       );
+    }
+  }
+
+  /** @private */
+  _ariaLabelChanged(ariaLabel, headerTitle) {
+    if (ariaLabel || headerTitle) {
+      this.$.popupOverlay.setAttribute('aria-label', ariaLabel || headerTitle);
+    } else {
+      this.$.popupOverlay.removeAttribute('aria-label');
     }
   }
 
