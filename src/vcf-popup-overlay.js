@@ -223,6 +223,8 @@ class PopupOverlayElement extends PositionMixin(Overlay) {
   ready() {
     super.ready();
 
+    this.setAttribute('role', 'dialog');
+
     // Update overflow attribute on resize
     this.__resizeObserver = new ResizeObserver(() => {
       this.__updateOverflow();
