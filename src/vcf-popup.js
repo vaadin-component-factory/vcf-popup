@@ -63,6 +63,10 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
    */
   static get properties() {
     return {
+      /**
+       * True if the overlay is currently displayed. Set to true to show the popup. Set to false to hide it.
+       * Note: You also can use show() method to open the popup.
+       */
       opened: {
         type: Boolean,
         value: false,
@@ -102,6 +106,9 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         reflectToAttribute: true
       },
 
+      /**
+       * Will close the popup if content of the popup is left-clicked.
+       */
       closeOnClick: {
         type: Boolean,
         value: false,
