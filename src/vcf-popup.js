@@ -215,6 +215,13 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         reflectToAttribute: true
       },
 
+      /** When true, the popup target will be scrolled into view when the popup is opened. */
+      scrollTargetIntoView: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+
       /**
        * Alignment of the popup with respect to its target.
        * Supported values:
@@ -307,24 +314,35 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   _openedChanged(opened, oldValue) {
     if (opened) {
-      setTimeout(() => {
-        document.addEventListener('click', this.hide);
-      });
-      this.__setPopupOpenedAttributeOnTarget();
+      this._onBeforeOverlayOpened();
     } else {
-      document.removeEventListener('click', this.hide);
-      this.__removePopupOpenedAttributeOnTarget();
+      this._onBeforeOverlayClosed();
     }
 
-    // avoid dispatching event when setting initial value 'false'
-    if (oldValue !== undefined) {
-      this.dispatchEvent(
-        new CustomEvent('popup-open-changed', {
-          detail: {
-            opened: opened
-          }
-        })
-      );
+    this.__firePopupOpenChangedEvent(oldValue, opened);
+  }
+
+  _onBeforeOverlayClosed() {
+    document.removeEventListener('click', this.hide);
+    this.__removePopupOpenedAttributeOnTarget();
+  }
+
+  _onBeforeOverlayOpened() {
+    setTimeout(() => {
+      document.addEventListener('click', this.hide);
+    });
+
+    this.__setPopupOpenedAttributeOnTarget();
+
+    if (this.scrollTargetIntoView) {
+      this.__ensureTargetIsInView();
+    }
+  }
+
+  /** @private */
+  __ensureTargetIsInView() {
+    if (this.target && !this.__isInViewport(this.target)) {
+      this.target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
     }
   }
 
@@ -334,6 +352,20 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       this.$.popupOverlay.setAttribute('aria-label', ariaLabel || headerTitle);
     } else {
       this.$.popupOverlay.removeAttribute('aria-label');
+    }
+  }
+
+  /** @private */
+  __firePopupOpenChangedEvent(oldValue, newValue) {
+    // avoid dispatching event when setting initial value 'false'
+    if (oldValue !== undefined) {
+      this.dispatchEvent(
+        new CustomEvent('popup-open-changed', {
+          detail: {
+            opened: newValue
+          }
+        })
+      );
     }
   }
 
@@ -440,6 +472,18 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     if (!isVisible) {
       this.hide();
     }
+  }
+
+  /** @private */
+  __isInViewport(element) {
+    const rect = element.getBoundingClientRect();
+
+    return (
+      rect.bottom >= 0 &&
+      rect.right >= 0 &&
+      rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.left <= (window.innerWidth || document.documentElement.clientWidth)
+    );
   }
 }
 

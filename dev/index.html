@@ -88,7 +88,7 @@
   <vaadin-button id='basic' style='align-self: center'>
     Basic
   </vaadin-button>
-  <vcf-popup for='basic'>
+  <vcf-popup for='basic' scroll-target-into-view>
     <template>
       <style>
         #container {
@@ -517,6 +517,18 @@
       popup.show();
     });
   </script>
+
+  <vaadin-button id='scroll-into-view-on-open'>
+    Scroll into view (Wide element test)
+  </vaadin-button>
+  <script type='module'>
+    const button = document.querySelector('#scroll-into-view-on-open');
+    button.addEventListener('click', () => {
+      const popup = document.querySelector('vcf-popup[for="wide-text"]');
+      popup.show();
+    });
+  </script>
+
   <vaadin-text-area id='description-text-area'
                     label='Description'
                     value='This is text in text area This is text in text area This is text in text area This is text in text area'
@@ -595,7 +607,7 @@
     asperiores repellat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
     sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
     asperiores repellat.</p>
-  <vcf-popup for='wide-text'>
+  <vcf-popup for='wide-text' scroll-target-into-view>
     <template>
       <style>
         #container {
@@ -617,7 +629,7 @@
     </template>
   </vcf-popup>
   <h3>Tall element test (click text below)</h3>
-  <p  id="tall-text" style="max-width: 300px">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
+  <p id="tall-text" style="max-width: 300px">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
     sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus
     asperiores repellat.
     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Praesent dapibus. Itaque earum rerum hic tenetur a
@@ -644,6 +656,16 @@
       </div>
     </template>
   </vcf-popup>
+  <vaadin-button id='scroll-basic-into-view-on-open'>
+    Scroll into view (Basic test)
+  </vaadin-button>
+  <script type='module'>
+    const button = document.querySelector('#scroll-basic-into-view-on-open');
+    button.addEventListener('click', () => {
+      const popup = document.querySelector('vcf-popup[for="basic"]');
+      popup.show();
+    });
+  </script>
 </main>
 </body>
 </html>
