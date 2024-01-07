@@ -461,7 +461,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   __setPositionTarget(target) {
     // Make sure that target element is rendered including shadowRoot
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       // position the popup relative to the internal input field for Vaadin components
       // which have input fields rather than overall copmonents (including label,
       // helper texts etc.)
