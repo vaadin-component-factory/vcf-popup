@@ -42,7 +42,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         modeless="[[modeless]]"
         focus-trap="[[focusTrap]]"
         highlight-target$="[[highlightTarget]]"
-        restore-focus-on-close
+        restore-focus-on-close$="[[restoreFocusOnClose]]"
       >
       </vcf-popup-overlay>
 
@@ -220,6 +220,14 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         type: Boolean,
         value: false,
         reflectToAttribute: true
+      },
+
+      /**
+       * Set to true to enable restoring of focus when popup is closed.
+       */
+      restoreFocusOnClose: {
+        type: Boolean,
+        value: true
       },
 
       /**
