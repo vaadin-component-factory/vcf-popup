@@ -440,6 +440,9 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       target.addEventListener('click', this.__targetClicked);
       target.setAttribute('has-popup', '');
       this.__setPositionTarget(target);
+      if (this.opened && this.scrollTargetIntoView) {
+        this.__ensureTargetIsInView();
+      }
 
       // Wait before observing to avoid Chrome issue.
       requestAnimationFrame(() => {
