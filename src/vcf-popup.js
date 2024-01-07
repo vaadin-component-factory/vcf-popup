@@ -472,7 +472,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
 
   __onTargetVisibilityChange(isVisible) {
     // Close the overlay when the target is no longer fully visible.
-    if (!isVisible) {
+    if (!isVisible && !this.scrollTargetIntoView) {
       this.hide();
     }
   }
