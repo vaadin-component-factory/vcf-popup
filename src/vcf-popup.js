@@ -38,7 +38,15 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
         }
       </style>
 
-      <vcf-popup-overlay id="popupOverlay" opened="{{opened}}" theme$="[[theme]]" with-backdrop="[[_phone]]" phone$="[[_phone]]"> </vcf-popup-overlay>
+      <vcf-popup-overlay
+        id="popupOverlay"
+        opened="{{opened}}"
+        theme$="[[theme]]"
+        with-backdrop="[[_phone]]"
+        phone$="[[_phone]]"
+        modeless="[[modeless]]"
+      >
+      </vcf-popup-overlay>
 
       <iron-media-query query="[[_phoneMediaQuery]]" query-matches="{{_phone}}"> </iron-media-query>
     `;
@@ -67,6 +75,12 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
       },
 
       closeOnClick: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+
+      modeless: {
         type: Boolean,
         value: false,
         reflectToAttribute: true
@@ -174,13 +188,14 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
     } else {
       window.removeEventListener('scroll', this._boundSetPosition, true);
     }
-    this.dispatchEvent(new CustomEvent('popup-open-changed', {
-      detail: {
-        opened: isOpened
-      }
-    }));
+    this.dispatchEvent(
+      new CustomEvent('popup-open-changed', {
+        detail: {
+          opened: isOpened
+        }
+      })
+    );
   }
-
 }
 
 customElements.define(VcfPopup.is, VcfPopup);
