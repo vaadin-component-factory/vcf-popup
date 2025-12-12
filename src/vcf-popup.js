@@ -57,7 +57,7 @@ class VcfPopup extends ElementMixin(ThemableMixin(PolymerElement)) {
   }
 
   static get version() {
-    return '1.2.6';
+    return '1.2.8';
   }
   /**
    * Object describing property-related metadata used by Polymer features
